@@ -1,0 +1,40 @@
+digraph g {
+
+q0[label="{a,b,c}",shape=doublecircle];
+q1[label="{c}"];
+q2[label="{c}"];
+q3[label="{c}"];
+q4[label="{a}"];
+
+
+FAIL;
+PASS;
+
+q0 -> q1[label="a"];
+q0 -> FAIL[label="b"];
+q0 -> FAIL[label="c"];
+q0 -> FAIL[label="⏊"];
+
+q1 -> q2[label="c"]; 
+q1 -> FAIL[label="a"];
+q1 -> FAIL[label="b"];
+q1 -> FAIL[label="⏊"];
+
+q2 -> q3[label="c"];
+q2 -> FAIL[label="a"];
+q2 -> FAIL[label="b"];
+q2 -> q4[label="⏊"];
+
+
+q3 -> PASS[label="c"];
+q3 -> FAIL[label="a"];
+q3 -> FAIL[label="b"];
+q3 -> FAIL[label="⏊"];
+
+q4 -> PASS[label="a"];
+q4 -> FAIL[label="b"];
+q4 -> FAIL[label="c"];
+q4 -> FAIL[label="⏊"];
+
+
+}

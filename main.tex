@@ -24,7 +24,12 @@
 \usepackage{graphicx}
 
 \usepackage{url}
-\urldef{\mailsa}\path|{jp,huang}@cs.uni-bremen.de|   
+\urldef{\mailsa}\path|{peleska,huang}@uni-bremen.de|   
+
+\urldef{\mailsb}\path|ana.cavalcanti@york.ac.uk|
+\urldef{\mailsc}\path|adenilso@icmc.usp.br|
+
+
 \newcommand{\keywords}[1]{\par\addvspace\baselineskip
 \noindent\keywordname\enspace\ignorespaces#1}
 
@@ -32,6 +37,7 @@
 \usepackage{lscape}
 \usepackage{lscape}
 
+\usepackage{zed-csp}
 
 
 \DeclareMathSymbol{\B}{\mathalpha}{AMSb}{"42}
@@ -46,7 +52,7 @@
 \newcommand{\obsv}[1]{{\cal O}(#1)}
 \newcommand{\ctrl}[1]{{\cal C}(#1)}
 \newcommand{\vdot}[1]{\stackrel{.}{#1}}
-\newcommand{\power}{\mathbf{P}}
+%\newcommand{\power}{\mathbf{P}}
 
 \newcommand{\HS}{{\mathcal H}}
 
@@ -102,6 +108,8 @@
 \newcommand{\Real}{{\mathbb R}}
 
 \newcommand{\trans}{\longrightarrow}
+\newcommand{\transxxx}[1]{\stackrel{#1}{\longrightarrow}}
+
 \newcommand{\transp}{\longrightarrow_{\power}}
 \newcommand{\transl}{\longrightarrow_{L}}
 \newcommand{\transg}{\longrightarrow_{G}}
@@ -109,12 +117,12 @@
 \newcommand{\isdefd}{=_{\mbox{\footnotesize def}}}
 \newcommand{\equivdef}{\equiv_{\mbox{\footnotesize def}}}
 \newcommand{\mitem}{\mbox{\em M-Item}}
-\newcommand{\fun}{\rightarrow}
-\newcommand{\pfun}{\not\rightarrow}
+%\newcommand{\fun}{\rightarrow}
+%\newcommand{\pfun}{\not\rightarrow}
 \newcommand{\currt}{\hat{t}}
 
-\newcommand{\dom}{\mbox{dom}}
-\newcommand{\ran}{\text{ran}}
+%\newcommand{\dom}{\mbox{dom}}
+%\newcommand{\ran}{\text{ran}}
 
 \newcommand{\sigmaa}{\sigma_A}
 \newcommand{\strictimplies}{\stackrel{\bullet}{\Rightarrow}}
@@ -214,6 +222,7 @@
 
 \newcommand{\tc}{{\text{TC}}}
 \newcommand{\TS}{{\text{TS}}}
+\newcommand{\DL}{{\text{DL}}}
 \newcommand{\ii}[1]{\underline{#1}}
 \newcommand{\inc}{\,{\rm I}\,}
 
@@ -261,18 +270,18 @@ Jan Peleska\inst{2}
 Adenilso Simao\inst{3}
 }
 %
-\authorrunning{Wen-ling Huang and Jan Peleska}
+\authorrunning{Ana Cavalcanti, Wen-ling Huang, Jan Peleska, and Adenilso Simao}
 
 
 \institute{
-University of York, United Kingdom
+University of York, United Kingdom\\
+\mailsb
 \and
-University of Bremen,\\
-Department of Mathematics and Computer Science,\\
-Bremen, Germany
+University of Bremen, Germany\\
+\mailsa
 \and
-University of S{\~a}o Paulo, Brazil
-\mailsa}
+University of S{\~a}o Paulo, Brazil\\
+\mailsc}
 
  
 \maketitle 

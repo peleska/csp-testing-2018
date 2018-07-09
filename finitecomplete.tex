@@ -1,3 +1,125 @@
 \section{Finite Complete Testing Theories for CSP}
+\label{sec:finitecomplete}
 % ==========================================================================
+\subsection{A Model Map from CSP Processes to Finite State Machines}
+\label{sec:mmap}
+
+We will now construct a model map for associating CSP processes represented by normalised transition graphs to finite state machines. The intuition behind this 
+construction is that the finite state machine's input alphabet  corresponds to
+{\it sets of inputs} that may be offered to a CSP process. Depending on the events 
+contained in this set, the process may (1) accept all of them, (2) accept some of them while refusing others, and (3) refuse all of them. This is reflected in the FSM
+by output events that represent events that the process really has engaged in and 
+an extra event $\bot$ representing deadlock, if the set of events has been refused.
+
+More formally, we fix a finit CSP process alphabet $\Sigma$ and consider a 
+finite-state process 
+$P$ over this alphabet with normalised transition graph 
+$G(P)=( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, a : N \fun \mathbb{P}\mathbb{P}(\Sigma))$,
+ then the model map $T$ maps $P$ to the following observable FSM $T(P) = (Q,\ii q, h,\Sigma_I,\Sigma_O)$ satisfying
+\begin{eqnarray*}
+Q & = & N\cup \{\DL\} 
+\\
+\ii q & = & \ii n
+\\
+\Sigma_I & = & \power(\Sigma) - \{ \varnothing \}
+\\
+\Sigma_O & = & \Sigma \cup \{ \bot\}
+\\
+h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge 
+(n,e)\in \dom~t\wedge t(n,e) = n' \} \cup {}
+\\ & & 
+\{ (n,A,\bot,\DL)~|~A\in \Sigma_I   \wedge 
+\exists A'\in a(n) \wedge A\cap A' = \varnothing
+  \}
+\end{eqnarray*} 
+
+\begin{example}\label{ex:b}
+For the CSP process $P$ and its transition graph $G(P)$ discussed in Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}. 
+For displaying its transitions, we used notation
+$$
+\forall A: \text{condition} / e
+$$
+which stands for a set of transitions between the respective nodes: one transition per non-empty set $A\subseteq \Sigma$ fulfilling the specified condition.
+The arrow Node\_0 $\longrightarrow$ Node\_2 labelled by $\forall A: a\in A / a$, 
+for example, stands for FSM transitions
+$$
+\begin{array}{l}
+\text{Node\_0} \xrightarrow{\{a\}/a} \text{Node\_2} \\
+\text{Node\_0} \xrightarrow{\{a,b\}/a} \text{Node\_2} \\
+\text{Node\_0} \xrightarrow{\{a,c\}/a} \text{Node\_2} \\
+\text{Node\_0} \xrightarrow{\{a,b,c\}/a} \text{Node\_2} \\
+\end{array}
+$$
+\xbox
+\end{example}
+
+
+% ...................................................................................
+ \begin{figure}
+ %%\hspace*{-40mm}
+ \begin{center}
+\includegraphics[width=\textwidth]{fsm0.pdf}
+\end{center}
+%%\vspace*{-10mm}
+\caption{FSM resulting from applying the model map to CSP process $P$ from Example~\ref{ex:a}.}
+ \label{fig:fsm0}
+ \end{figure}
+% ................................................................................... 
+
+
+% ==========================================================================
+\subsection{A Test Case Map from Finite State Machines to CSP Processes}
+\label{sec:tcmap}
+
+% -------------------------------------------------------------------------
+\subsubsection*{FSM Test Cases}
+
+Following~\cite{DBLP:conf/hase/PetrenkoY14}, 
+an \emph{adaptive FSM test case} is a nondeterministic, observable, output-complete, acyclic FSM which only provides a single input in a given state. Running in FSM intersection mode with the SUT, the test case provides a specific input to the SUT; the input is determined by the current state of the test case. It accepts every output and transits either to a fail-state, if the output is wrong according to the reference model, or to the next test state uniquely determined  by the processed input/output pair. Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs.
+
+\begin{example}
+Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
+for the same input and output alphabets as defined for  the FSM presented in Example~\ref{ex:b}. The test case is passed by the FSM from Example~\ref{ex:b}, because 
+intersecting the two state machines results in an FSM which always reaches the PASS state.
+\xbox
+\end{example}
+
+
+% ...................................................................................
+ \begin{figure}
+ %%\hspace*{-40mm}
+ \begin{center}
+\includegraphics[width=.7\textwidth]{fsm0tc.pdf}
+\end{center}
+%%\vspace*{-10mm}
+\caption{An FSM test case which is passed by the FSM presented in Example~\ref{ex:b}.}
+ \label{fig:fsm0tc}
+ \end{figure}
+% ................................................................................... 
+
+ 
+
+
+% -------------------------------------------------------------------------
+\subsubsection*{CSP Test Cases}
+A \emph{CSP test case} is a terminating process with alphabet 
+$\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for 
+(1) test  verdict FAIL ($\dag$), (2) timeout ($\bot$), and (3) test 
+ verdict PASS ($\tick$). In principle, very general classes of CSP processes can be
+ used for testing, as introduced, for example, in~\cite{peleska_testing_1996,peleska1997a}. For the purpose of this paper, however, we can restrict the possible variants of CSP test cases to the ones that are in the range of the test case map which is constructed next.
+
+
+
+% -------------------------------------------------------------------------
+\subsubsection*{Test Case Map}
+
+The test case map $T^* :TC(FSM) \fun TC(CSP)$ is specified with respect to a fixed
+CSP process alphabet $\Sigma$ and the associated FSM input and output alphabets
+$\Sigma_I = \power(\Sigma)-\{\varnothing\}$ and $\Sigma_O=\Sigma\cup \{\bot \}$.
+
+
+
+
+% ==========================================================================
+
 
