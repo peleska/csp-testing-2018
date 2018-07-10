@@ -149,7 +149,7 @@ is a complete test suite with respect to fault model ${\cal F}_1$.
 
 As shown in~\cite{Roscoe:1994:CME:197600}, any finite-state CSP process $P$ can be represented by a \emph{normalised transition graph} 
 $$
-G(P) = ( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, a : N \fun \mathbb{P}\mathbb{P}(\Sigma)),
+G(P) = ( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, ac : N \fun \mathbb{P}\mathbb{P}(\Sigma)),
 $$
 with nodes $N$, initial node $\ii n\in N$, and process alphabet $\Sigma$. The partial \emph{transition function} $t$ maps a node $n$ and an event $e\in\Sigma$ to its successor node $t(n,e)$, if and only if $(n,e)$ are in the domain of $t$. Normalisation of $G(P)$ is reflected 
 by the fact that $t$ is a function. The total function $a$ maps each node to its set of \emph{minimal acceptances}: 
@@ -272,3 +272,35 @@ is well-defined. Deterministic FSMs are always observable.
 Two FSM $M_1, M_2$ are \emph{I/O-equivalent ($M_1\sim M_2$)} if and only if their languages coincide, i.e.~$L(M_1) = L(M_2)$. FSM $M_1$ is a \emph{reduction of $M_2$ ($M_1 \preceq M_2$)},
 if and only if $L(M_1) \subseteq L(M_2)$. I/O-equivalence is also called 
 \emph{trace equivalence} by some authors, see, e.g.~\cite{luo_test_1994}.
+
+% ------------------------------------------------------------------------------------
+
+
+% -----------------------------------------------------------------------------------
+FSMs can be composed in parallel by synchronising over common input/output events:
+Let FSMs $M_i=(Q_i, \ii{q_i}, \Sigma_I, \Sigma_O,  h_i), i = 1,2$ be defined over
+the same input/output alphabets. Then 
+$$
+M_1 \cap M_2 = (Q_1\times Q_2, (\ii{q_1},\ii{q_2}),\Sigma_I, \Sigma_O, h)
+$$
+where the transition relation is specified by 
+$$
+h((q_1,q_2),x,y,(q_1',q_2')) \Leftrightarrow h_1(q_1,x,y,q_1') \wedge h_2(q_2,x,y,q_2')
+$$
+By construction, $L(M_1 \cap M_2) = L(M_1) \cap L(M_2)$. Every execution 
+$$
+(\ii{q_1},\ii{q_2}) \xrightarrow{x_1/y_1} (q_1^1,q_2^1) 
+\xrightarrow{x_2/y_2} \dots \xrightarrow{x_k/y_k} (q_1^{k},q_2^{k})
+$$
+of 
+$M_1\cap M_2$
+is composed of executions 
+$$
+\ii{q_1} \xrightarrow{x_1/y_1} q_1^1 
+\xrightarrow{x_2/y_2} \dots \xrightarrow{x_k/y_k} q_1^{k}\
+\text{of}\ M_1\ \text{and}\ 
+\ii{q_2} \xrightarrow{x_1/y_1} q_2^1 
+\xrightarrow{x_2/y_2} \dots \xrightarrow{x_k/y_k} q_2^{k}\
+\text{of}\ M_2
+$$
+
