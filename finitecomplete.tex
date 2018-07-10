@@ -29,7 +29,7 @@ h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge
 (n,e)\in \dom~t\wedge t(n,e) = n' \} \cup {}
 \\ & & 
 \{ (n,A,\bot,\DL)~|~A\in \Sigma_I   \wedge 
-\exists A'\in a(n) \wedge A\cap A' = \varnothing
+\exists A'\in ac(n) \wedge A\cap A' = \varnothing
   \}
 \end{eqnarray*} 
 
@@ -135,6 +135,40 @@ tc(q) & = & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e)\notin \{\text{PASS},\text{F
 \\ & & \extchoice
 \\ & & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e) = \text{FAIL} \} \bullet e \then \dag \then \Skip \big)
 \end{eqnarray*}
+
+
+% ..........................................................................
+\begin{example}
+The FSM test case $tc_\text{FSM}$
+shown in Fig.~\ref{fig:fsm0tc} is mapped by $T^*$ to the following
+CSP test case.
+\begin{eqnarray*}
+T^*(tc_\text{FSM}) & = & P_1
+\\
+P_1 & = & \big(e:\{ b,c,\bot \} \bullet e \then \dag\then\Skip\big)
+\\ & & \extchoice
+\\ & & \big( a \then P_2 \big) 
+\\
+P_2 & = & \big( e : \{ a,b,\bot \}\bullet e\then \dag\then\Skip  \big)
+\\ & & \extchoice
+\\ & & \big( c\then P_3 \big)
+\\
+P_3 & = & \big( e : \{ a,b \}\bullet e\then \dag\then\Skip  \big)
+\\ & & \extchoice
+\\ & & \big( \bot \then P_4 \big)
+\\ & & \extchoice
+\\ & & \big( c\then P_5 \big)
+\\
+P_4 & = & \big( e : \{ b,c,\bot \}\bullet e\then \dag\then\Skip  \big)
+\\ & & \extchoice
+\\ & &  \big( a\then\tick\then \Skip \big)
+\\
+P_5 & = & \big( e : \{ a,b,\bot \}\bullet e\then \dag\then\Skip  \big)
+\\ & & \extchoice
+\\ & & \big( c\then\tick\then \Skip \big)
+\end{eqnarray*}
+\xbox
+\end{example}
 
 
 % ==========================================================================

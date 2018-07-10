@@ -153,14 +153,14 @@ G(P) = ( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, a : N \fun \mathbb{P}\math
 $$
 with nodes $N$, initial node $\ii n\in N$, and process alphabet $\Sigma$. The partial \emph{transition function} $t$ maps a node $n$ and an event $e\in\Sigma$ to its successor node $t(n,e)$, if and only if $(n,e)$ are in the domain of $t$. Normalisation of $G(P)$ is reflected 
 by the fact that $t$ is a function. The total function $a$ maps each node to its set of \emph{minimal acceptances}: 
-if $n\in N$ corresponds to a deterministic process state of $P$, $a(n)$ contains a single acceptance $A\subseteq \Sigma$, and every $e\in A$ is in one-one-correspondence with a transition $t(n,e)$. If $n$ corresponds to a nondeterministic process state, $a(n)$ contains at least two acceptances $A_1, A_2, \dots, A_k$. This reflects the fact that in a nondeterministic state, $P$ must accept all events of one acceptance 
+if $n\in N$ corresponds to a deterministic process state of $P$, $ac(n)$ contains a single acceptance $A\subseteq \Sigma$, and every $e\in A$ is in one-one-correspondence with a transition $t(n,e)$. If $n$ corresponds to a nondeterministic process state, $ac(n)$ contains at least two acceptances $A_1, A_2, \dots, A_k$. This reflects the fact that in a nondeterministic state, $P$ must accept all events of one acceptance 
 $A_i, i \in \{ 1,\dots,k\}$, but may refuse all events $e$ from 
 $A_j \setminus A_i, j\neq i$. 
 
 Each well-defined transition graph $G(P)$ fulfils the following condition. The union of all minimal acceptances in each node corresponds to the set of events labelling its outgoing transitions.
 \begin{equation}
 \label{eq:wellformedg}
-\forall n\in N: (n,e)\in\dom~t \Leftrightarrow e\in\bigcup a(n)
+\forall n\in N: (n,e)\in\dom~t \Leftrightarrow e\in\bigcup ac(n)
 \end{equation}
 In this condition, $\dom~t$ denotes the domain of function $t$. 
 
@@ -170,7 +170,7 @@ starting at $\ii n$. The maximal refusals in each process state $P/s$
  are the complements of 
 the minimal acceptances of the node $n$ 
 corresponding to $P/s$. As a consequences, all failures 
-of $P$ are represented by some $(s,R)$, where $s$ is an initialised path through the transition graph and $R\subseteq (\Sigma-A)$ for some minimal acceptance $A\in a(n)$, 
+of $P$ are represented by some $(s,R)$, where $s$ is an initialised path through the transition graph and $R\subseteq (\Sigma-A)$ for some minimal acceptance $A\in ac(n)$, 
 such that $n$ is the node corresponding to $P/s$. 
 
 \begin{example}\label{ex:a}
