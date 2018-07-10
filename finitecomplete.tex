@@ -75,7 +75,12 @@ $$
 \subsubsection*{FSM Test Cases}
 
 Following~\cite{DBLP:conf/hase/PetrenkoY14}, 
-an \emph{adaptive FSM test case} is a nondeterministic, observable, output-complete, acyclic FSM which only provides a single input in a given state. Running in FSM intersection mode with the SUT, the test case provides a specific input to the SUT; the input is determined by the current state of the test case. It accepts every output and transits either to a fail-state, if the output is wrong according to the reference model, or to the next test state uniquely determined  by the processed input/output pair. Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs.
+an \emph{adaptive FSM test case} $tc_\text{FSM}=(Q,\ii q,h,\Sigma_I,\Sigma_O,in)$ is a nondeterministic, observable, output-complete, acyclic FSM which only provides a single input in a given state. Running in FSM intersection mode with the SUT, the test case provides a specific input to the SUT; this input is determined by the current state of the test case. It accepts every output and transits either to a fail-state FAIL, if the output is wrong according to the test objectives, or to the next test state uniquely determined  by the processed input/output pair. Another state PASS indicates that
+the test has been completed without failure. Both FAIL and PASS are termination states, that is, they do not have any outgoing transitions.
+
+Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs. A function $in : Q -\{  \text{PASS}, \text{FAIL} \} 
+\fun\Sigma_I$ maps the states to these inputs. Termination states
+of the FSM are not labelled with further inputs.
 
 \begin{example}
 Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
@@ -89,7 +94,7 @@ intersecting the two state machines results in an FSM which always reaches the P
  \begin{figure}
  %%\hspace*{-40mm}
  \begin{center}
-\includegraphics[width=.7\textwidth]{fsm0tc.pdf}
+\includegraphics[width=.8\textwidth]{fsm0tc.pdf}
 \end{center}
 %%\vspace*{-10mm}
 \caption{An FSM test case which is passed by the FSM presented in Example~\ref{ex:b}.}
@@ -114,10 +119,22 @@ $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
 \subsubsection*{Test Case Map}
 
 The test case map $T^* :TC(FSM) \fun TC(CSP)$ is specified with respect to a fixed
-CSP process alphabet $\Sigma$ and the associated FSM input and output alphabets
+CSP process alphabet $\Sigma$ extended by the events $\{\dag,\bot,\tick \}$ introduced
+above
+and the associated FSM input and output alphabets
 $\Sigma_I = \power(\Sigma)-\{\varnothing\}$ and $\Sigma_O=\Sigma\cup \{\bot \}$.
-
-
+Given an FSM test case $tc_\text{FSM}=(Q,\ii q,h,\Sigma_I,\Sigma_O,in)$, 
+the image $T^*(tc_\text{FSM})$ is the CSP process $tc_\text{CSP}$ specified 
+as follows.
+\begin{eqnarray*}
+tc_\text{CSP} & = & tc(\ii q)
+\\
+tc(q) & = & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e)\notin \{\text{PASS},\text{FAIL}\} \} \bullet e \then tc(h_1(q,in(q),e) \big)
+\\ & & \extchoice
+\\ & & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e) = \text{PASS} \} \bullet e \then \tick \then \Skip \big)
+\\ & & \extchoice
+\\ & & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e) = \text{FAIL} \} \bullet e \then \dag \then \Skip \big)
+\end{eqnarray*}
 
 
 % ==========================================================================
