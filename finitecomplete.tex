@@ -33,6 +33,9 @@ h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge
   \}
 \end{eqnarray*} 
 
+We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$ are
+\emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the FSM output trace $s$ may contain deadlock events $\bot$ that are not contained in the CSP process alphabet $\Sigma$. 
+
 \begin{example}\label{ex:b}
 For the CSP process $P$ and its transition graph $G(P)$ discussed in Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}. 
 For displaying its transitions, we used notation
@@ -220,11 +223,11 @@ as follows.
 \begin{eqnarray*}
 tc_\text{CSP} & = & tc(\ii q)
 \\
-tc(q) & = & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e)\notin \{\text{PASS},\text{FAIL}\} \} \bullet e \then tc(h_1(q,in(q),e) \big)
+tc(q) & = & \big( e : \{ a\in in(q)\cup\{\bot\}~|~h_1(q,in(q),a)\notin \{\text{PASS},\text{FAIL}\} \} \bullet e \then tc(h_1(q,in(q),e) \big)
 \\ & & \extchoice
-\\ & & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e) = \text{PASS} \} \bullet e \then \tick \then \Skip \big)
+\\ & & \big( e : \{ a\in in(q)\cup\{\bot\}~|~h_1(q,in(q),a) = \text{PASS} \} \bullet e \then \tick \then \Skip \big)
 \\ & & \extchoice
-\\ & & \big( e : \{ a\in in(q)~|~h_1(q,in(q),e) = \text{FAIL} \} \bullet e \then \dag \then \Skip \big)
+\\ & & \big( e : \{ a\in in(q)\cup\{\bot\}~|~h_1(q,in(q),a) = \text{FAIL} \} \bullet e \then \dag \then \Skip \big)
 \end{eqnarray*}
 
 
@@ -264,6 +267,7 @@ P_5 & = & \big( e : \{ a,b,\bot \}\bullet e\then \dag\then\Skip  \big)
 The following theorem shows the validity of the satisfaction condition {\bf SC2}
 regarding the test case map, the model map, and the pass conditions for tests on CSP level and FSM level.
 
+% ----------------------------------------------------------------------
 \begin{theorem}
 Fixing a CSP process alphabet $\Sigma$, the model map 
 $T : \underline{Sig}_1 \fun FSM$ and the test case map $T^*:TC(FSM) \fun TC(CSP)$ fulfil satisfaction condition {\bf SC2} in the sense that
@@ -277,7 +281,28 @@ Let $T(P) = (Q,\ii q,\Sigma_I,\Sigma_O,h)$ and
 $tc_\text{FSM} = (Q',\ii q',\Sigma_I,\Sigma_O,h',in)$.
 
 \noindent
-{\bf Step~1.} We show by induction over the length of $s\in\Sigma_O^*$:
+We show by induction over the length of $s\in\Sigma_O^*$ that the following 
+assertions hold for all $s$.
+\begin{enumerate}
+\item For every pass-trace $x/s \in L(T(P)) \cap L(tc_\text{FSM})$, 
+there exists a pass-trace $u \in \text{tr}(P\parallel[\Sigma] T^*(tc_\text{FSM}))$, such that
+$u\project\Sigma$ corresponds to $x/s$.
+
+\item For every fail-trace  $x/s \in L(T(P)) \cap L(tc_\text{FSM})$, 
+there exists a fail-trace trace 
+$u \in \text{tr}(P\parallel[\Sigma] T^*(tc_\text{FSM}))$, such that
+$u\project\Sigma$ corresponds to $x/s$.
+
+\item For all $x/s\in L(T(P))$, 
+the graph nodes of $G(P)$ and the states of $T(P)$ are related by
+$$
+\begin{array}{l}
+G(P)/(s\project\Sigma) = \ii q\after (x/s).
+\end{array}
+$$
+
+\item FSM test $tc_\text{FSM}$ and CSP test $T^*(tc_\text{FSM})$ perform consistent
+state changes, in the sense that
 $$
 \begin{array}{l}
 x/s\in L(T(P))\cap L(tc_\text{FSM}) \wedge  \ii q'\after (x/s) \not\in \{\text{PASS},\text{FAIL}\}
@@ -288,31 +313,47 @@ T^*(tc_\text{FSM})/(s\project \Sigma) = tc(\ii q'\after (x/s)),
 $$
 where $tc(q)$ has been defined above with the test case map.
 
-For the base case, $s$ is the empty trace, so $x/s$ is empty as well, and $tc_\text{FSM}$ resides in its initial state $\ii q'$. By definition of the test case map above, $T^*(tc_\text{FSM})$ has initial CSP process state $tc(\ii q')$; this proves the assertion for the case $\#s = 0$.
+\end{enumerate}
 
-For the induction hypothesis, assume that the assertion of Step~1 has been proven for
+Proof of 1 and 2 obviously proves the theorem; assertions~2 and 3 are 
+needed to perform the induction argument.
+
+
+
+For the base case, $s$ is the empty trace, so $x/s$ is empty as well. We have 
+$G(P)/\varepsilon = \ii n = \ii q$, due to the definition of the model map. 
+FSM test case $tc_\text{FSM}$ resides in its initial state $\ii q'$. By definition of the test case map above, $T^*(tc_\text{FSM})$ has initial CSP process state $tc(\ii q')$; this proves  Assertion~3 and Assertion~4 for the case $\#s = 0$. For assertions 1 and 2, there is nothing to
+prove: no test can pass or fail on the empty trace.
+
+For the induction hypothesis, assume that the four assertions have been proven for
 $\#s \le k$ with $0\le k$.
 
 For the induction step, assume that the FSM test has run through trace $x/s$ such that
 $\#s \le k$ and $\ii q'\after (x/s) = q'$. The induction hypothesis gives us
-$T^*(tc_\text{FSM})/(s\project \Sigma) = tc(q')$.
+$G(P)/(s\project\Sigma) = \ii q\after (x/s)$
+from Assertion~3 and
+$T^*(tc_\text{FSM})/(s\project \Sigma) = tc(q')$ from Assertion~4.
 FSM test $tc_\text{FSM}$ will offer input $in(q')$ to the FSM $T(P)$ which is being tested. We make a case analysis for the outcomes of the resulting test step.
 
-%\noindent
-%{\bf Case~1.} $T(P)$ performs a transition into the deadlock state, so 
-%$$
-%\ii q\after(x.in(q')/s.\bot) = \DL.
-%$$
+ 
 
 \noindent
-{\bf Case~1.} FSM test $tc_\text{FSM}$ 
-performs a transition into a non-blocking state, so 
-$$
-\ii q'\after(in(q')/e) \not\in\{ \text{PASS},\text{FAIL} \},
-$$
-where $in(q')/e \in L(\ii q\after(x/s))$. Then the new state of $tc_\text{FSM}$
-is $u' = h'_1(q',in(q'),e)$. By definition of $tc(q')$, the CSP test case will 
-transit with event $e$ to $tc(u')$ which was to be shown.
+{\bf Case~1.} $(x.in(q'))/(s.\bot) \in L(\ii q\after (x/s))$.\newline
+By construction of $T(P)$, this is exactly the case if 
+$in(q')\in r(G(P)/(s\project \Sigma))$. Since $tc_\text{FSM}$ is output complete,
+$in(q')/\bot \in L(q')$. Depending on the nature of the test case, 
+$q'\after (in(q')/\bot)$ is one of the deadlock states PASS, FAIL, or it is a
+non-blocking FSM state, say, $q''$. Since $tc_\text{FSM}$ is observable, however, 
+this post-state is uniquely determined. Observability of $tc_\text{FSM}$ 
+implies further that the sets $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a)\notin \{\text{PASS},\text{FAIL}\}$, $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \}$, and $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}$
+used in the definition of $tc(q)$ are disjoint. As a consequence, $T^*(tc_\text{FSM})$
+has exactly one choice to proceed and will come to the post-states that are analogous to those of $tc_\text{FSM}$: if $tc_\text{FSM}$ terminates in PASS(FAIL), then 
+$T^*(tc_\text{FSM})$ will produced the events $\bot$ followed by 
+$\tick(\dag)$ and terminate. If $tc_\text{FSM}$  transits to $q''$, CSP test case
+$T^*(tc_\text{FSM})$ will perform $\dag$ as well and continue like process 
+$tc(q'\after(in(q')/\bot)$
+
+ 
 
 \noindent
 {\bf Case~2.} FSM test $tc_\text{FSM}$ 
