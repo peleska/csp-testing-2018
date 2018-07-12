@@ -5,24 +5,23 @@ Node_0[shape=doublecircle];
 Node_2;
 Node_1;
 Node_3;
-DL;
 
-Node_0 -> Node_2[label="∀ A: a ∈ A /a"];
-Node_0 -> DL[label="∀ A: a ∉ A/⏊"];
+Node_0 -> Node_2[label="(a ∈ A)/a"];
+Node_0 -> Node_0[label=" (a ∉ A)/⏊"];
 
-Node_2 -> Node_0[label="∀ A: a ∈ A /a"];
-Node_2 -> Node_0[label="∀ A: b ∈ A /b"];
-Node_2 -> Node_1[label="∀ A: c ∈ A /c"];
-Node_2 -> DL[label="∀ A: {a,c} ∩ A = {} ⌄ {c,b} ∩ A = {}/⏊"];
+Node_2 -> Node_0[label="(a ∈ A)/a"];
+Node_2 -> Node_0[label="(b ∈ A)/b"];
+Node_2 -> Node_1[label="(c ∈ A)/c"];
+Node_2 -> Node_2[label="\l ({a,c} ∩ A = {} ⌄ {c,b} ∩ A = {})/⏊"];
 
-Node_1 -> Node_2[label="∀ A: a ∈ A /a"];
-Node_1 -> Node_0[label="∀ A: b ∈ A /b"];
-Node_1 -> Node_3[label="∀ A: c ∈ A /c"];
-Node_1 -> DL[label="∀ A: {a} ∩ A = {} ⌄ {c,b} ∩ A = {}/⏊"];
+Node_1 -> Node_2[label="(a ∈ A)/a"];
+Node_1 -> Node_0[label=" (b ∈ A)/b"];
+Node_1 -> Node_3[label="(c ∈ A)/c"];
+Node_1 -> Node_1[label="\l ({a} ∩ A = {} ⌄ {c,b} ∩ A = {})/⏊"];
 
-Node_3 -> Node_3[label="∀ A: c ∈ A /c"];
-Node_3 -> Node_0[label="∀ A: b ∈ A /b"];
-Node_3 -> DL[label="∀ A: {c,b} ∩ A = {}/⏊"];
+Node_3 -> Node_3[label="(c ∈ A)/c  "];
+Node_3 -> Node_0[label=" (b ∈ A)/b"];
+Node_3 -> Node_3[label=" ({c,b} ∩ A = {})/⏊"];
 
 
 
