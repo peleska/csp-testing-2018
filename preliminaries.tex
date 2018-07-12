@@ -164,12 +164,19 @@ the more nondeterministic is the behaviour in state $P/s$. If $P/s$ is determini
 its refusals coincide with the set of subsets of $\Sigma - [P/s]^0$, including the 
 empty set. Since the refusals of each process state are 
 subset-closed~\cite{Hoare:1985:CSP:3921,Roscoe2010}, $\refs(P/s)$ can be re-constructed
-by knowing the \emph{maximal refusals} in $\refs(P/s)$ and then  building the subset closure. Well-formed normalised transition graphs must not refuse an event of the fan-out
+by knowing the set of \emph{maximal refusals} $\maxrefs(P/s)\subseteq\refs(P/s)$ (we also write $\maxrefs(n) \subseteq r(n)$ using transition graph nodes instead of 
+process states) and then  building the subset closure. More formally, the maximal refusals 
+are defined as
+$$
+\maxrefs(n) = \{ R \in\refs(n)~|~\forall R'\in r(n) - \{ R\}: R \not\subseteq R'\}
+$$
+
+Well-formed normalised transition graphs must not refuse an event of the fan-out
 with {\it every} refusal applicable in this state; more formally,
 \begin{equation}
 \label{eq:wellformedg}
 \forall n\in N, e\in\Sigma: (n,e)\in\dom~t \Rightarrow 
-\exists R\in r(n): e\not\in R
+\exists R\in \maxrefs(n): e\not\in R  
 \end{equation}
 
 

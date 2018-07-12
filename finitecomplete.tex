@@ -183,6 +183,18 @@ Since the test case state determines the input for all of its outgoing transitio
 \fun\Sigma_I$ maps the states to these inputs. Termination states
 of the FSM are not labelled with further inputs.
 
+There is no requirement that an FSM test case running in intersection mode against
+an FSM $M$ acting as SUT should {\it always} reach the PASS state. Since the SUT may be nondeterministic, it may perform a joint test execution that blocks before
+the test case's PASS state is reached. In such a case, the result of the test execution is \emph{inconclusive}. Due to nondeterminism, for $M$ to pass a test case, it 
+has to checked that {\it every possible} test execution of  $tc_\text{FSM}$ against $M$
+terminates either in PASS, or that the result remains inconclusive. If one execution ends in FAIL, the test verdict is FAIL. More formally,
+$$
+M\ \pass\ tc_\text{FSM} \equiv 
+\big(
+\forall x/y \in L(M)\cap L(tc_\text{FSM}): \ii q\after(x/y) \neq FAIL
+\big).
+$$
+
 \begin{example}
 Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
 for the same input and output alphabets as defined for  the FSM presented in Example~\ref{ex:b}. The test case is passed by the FSM from Example~\ref{ex:b}, because 
@@ -208,13 +220,28 @@ intersecting the two state machines results in an FSM which always reaches the P
 
 % -------------------------------------------------------------------------
 \subsubsection*{CSP Test Cases}
-A \emph{CSP test case} is a terminating process with alphabet 
+A \emph{CSP test case} $tc_\text{CSP}$  is a terminating process with alphabet 
 $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for 
 (1) test  verdict FAIL ($\dag$), (2) timeout ($\bot$), and (3) test 
- verdict PASS ($\tick$). In principle, very general classes of CSP processes can be
+ verdict PASS ($\tick$). The test case runs in parallel with the SUT $P$,
+ synchronising over all events from the visible alphabet $\Sigma$ of $P$. This is 
+ expressed by the formula
+ $$
+ P\parallel[\Sigma] tc_\text{CSP}.
+ $$
+ 
+ In analogy to FSM test cases, a CSP process $P$ passes a test case $tc_\text{CSP}$
+ if the traces of the parallel composition do not contain the failure event, that is,
+ $$
+ P\ \pass\ tc_\text{CSP} \equiv \big(
+ \forall s\in\trc(P\parallel[\Sigma] tc_\text{CSP}): (s\project \{\dag\}) = \varepsilon
+ \big)
+ $$
+
+ 
+ In principle, very general classes of CSP processes can be
  used for testing, as introduced, for example, 
  in~\cite{DBLP:conf/fm/PeleskaS96,peleska1997a}. For the purpose of this paper, however, we can restrict the possible variants of CSP test cases to the ones that are in the range of the test case map which is constructed next.
-
 
 
 % -------------------------------------------------------------------------
