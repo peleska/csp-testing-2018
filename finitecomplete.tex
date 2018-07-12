@@ -336,19 +336,26 @@ prove: no test can pass or fail on the empty trace.
 For the induction hypothesis, assume that the four assertions have been proven for
 $\#s \le k$ with $0\le k$.
 
-For the induction step, assume that the FSM test has run through trace $x/s$ such that
-$\#s \le k$ and $\ii q'\after (x/s) = q'$. The induction hypothesis gives us
-$G(P)/(s\project\Sigma) = \ii q\after (x/s)$
+For the induction step, assume that the FSM $T(P)$ 
+has run through trace $x/s\in L(T(P))\cap L(tc_\text{FSM})$ such that
+$\#s \le k$ and $\ii q\after(x/s) = q\in N$. Moreover, the FSM test case
+$tc_\text{FSM}$ fulfils  $\ii q'\after (x/s) = q'$ for a uniquely defined state 
+$q'\in Q'$. The induction hypothesis gives us
+$G(P)/(s\project\Sigma) = \ii q\after (x/s) = q$
 from Assertion~3 and
 $T^*(tc_\text{FSM})/(s\project \Sigma) = tc(q')$ from Assertion~4.
-FSM test $tc_\text{FSM}$ will offer input $in(q')$ to the FSM $T(P)$ which is being tested. We make a case analysis for the outcomes of the resulting test step.
+FSM test $tc_\text{FSM}$ will offer input $in(q')$ to the FSM $T(P)$ which is being tested. We distinguish two cases  for the outcomes of the resulting test step.
 
  
-
+\medskip
 \noindent
 {\bf Case~1.} $(x.in(q'))/(s.\bot) \in L(\ii q\after (x/s))$.\newline
 By construction of $T(P)$, this is exactly the case if 
-$in(q')\in r(G(P)/(s\project \Sigma))$. Since $tc_\text{FSM}$ is output complete,
+$in(q')\in r(G(P)/(s\project \Sigma)) - \{ \varnothing\}$. By construction of $T(P)$,
+this FSM will perform a self-loop transition labelled by $in(q')/\bot$ and therefore remain in $q$. For $P$, the corresponding behaviour is to refuse all events from 
+$in(q')$, so $q$ also remains as the current state in $G(P)/(s\project \Sigma)$. This proves Assertion~3 for the induction step, Case~1.
+
+Since $tc_\text{FSM}$ is output complete,
 $in(q')/\bot \in L(q')$. Depending on the nature of the test case, 
 $q'\after (in(q')/\bot)$ is one of the deadlock states PASS, FAIL, or it is a
 non-blocking FSM state, say, $q''$. Since $tc_\text{FSM}$ is observable, however, 
@@ -361,16 +368,48 @@ $\tick(\dag)$ and terminate. If $tc_\text{FSM}$  transits to $q''$, CSP test cas
 $T^*(tc_\text{FSM})$ will perform $\dag$ as well and continue like process 
 $tc(q'\after(in(q')/\bot)$ with $q'\after(in(q')/\bot) = q''$. 
 Since $\bot,\tick,\dag$ are not contained in $\Sigma$, the CSP process $P$ 
-cannot block these transitions of  $T^*(tc_\text{FSM})$, since we have assumed $P$ to be non-divergent. This shows that $tc_\text{FSM}$ and $T^*($tc_\text{FSM}$)$ engage into the same pass/fail traces, as was to be shown.
+cannot block these transitions of  $T^*(tc_\text{FSM})$, since we have assumed $P$ to be non-divergent. This shows that $tc_\text{FSM}$ and $T^*(tc_\text{FSM})$ engage into the same pass/fail/continue step, as was to be shown. This proves assertions~1,2,4 
+for Case~1.
+
+
 
  
-
+\medskip
 \noindent
-{\bf Case~2.} FSM test $tc_\text{FSM}$ 
-performs a transition into the FAIL-state. This
+{\bf Case~2.} $(x.in(q'))/(s.e) \in L(\ii q\after (x/s))$ with $e\in in(q')\subseteq\Sigma$.\newline
+By construction of $T(P)$, this case applies whenever $e\in A\wedge (n,e)\in\dom~t$.
+Also by construction, FSM $T(P)$ will transit to $t(q,e)$ (recall that
+$q = G(P)/(s\project \Sigma)$, so
+$q\after(in(q')/e) = u$ for a uniquely defined state $u= t(q,e) \in N$. Since 
+$G(P)/(s\project \Sigma)$ will also transit to $u$ by definition of $t$, this proves the induction step for Assertion~3.
+
+With the same argument as in Case~1, we conclude that $tc_\text{FSM}$ and
+$tc(q')$ can perform equivalent test steps, leading to PASS or FAIL deadlock state,
+or to continuation of the test in the new state $q'\after(in(q')/e)$.
+This proves the induction step for assertions 1,2,4 in Case~2 and completes the proof.
 \xbox
 \end{proof}
 
 % ==========================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
