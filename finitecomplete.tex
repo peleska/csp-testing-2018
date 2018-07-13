@@ -77,89 +77,140 @@ $$
 
 
 We are now in the position to state and prove the theorem about the model map 
-fulfilling the satisfaction condition {\bf SC1} introduced in Section~\ref{sec:transltt}. To this end, we first introduce three lemmas.
+fulfilling the satisfaction condition {\bf SC1} introduced in Section~\ref{sec:transltt}. To this end, we first introduce five lemmas.
 
 
-
-\begin{lemma}\label{lemma:a}
-Let $s\in \Sigma^*$ be any trace of $P$. Let $\underline n$ be the initial node of $G(P)$ and the initial state of $T(P)$. Let $n$ be the node of $G(P)$ denoting the process state $P/s$. Then for any input sequences $x\in \Sigma_I^*$ satisfying 
-$\#x = \#s = k$   and $s(i)\in x(i)$, $\forall i\le k$, we have $x/s\in L(T(P))$ and $\underline n{\text{-after-}}x/s=n$. Furthermore,
-for any $B\in \Sigma_I$, 
-$$
-B\in {\text{\rm Ref}}(P/s)\Leftrightarrow (x/s).(B/\bot) \in L(T(P))
-$$
-Conversely, any $x/s\in L(T(P))$ fulfils either
-\begin{enumerate}
-\item  $s\in {\text {\rm tr}}(P)$ and $s(i)\in x(i), \forall i\le \#(x/s)$,
-or
-\item $x/s=(x'.x_k)/(s'.\bot)$ with $s'\in {\text {\rm tr}}(P)$, $s(i)\in x(i), \forall i< \#(x/s)$ and $x_k\in {\text{\rm Ref}}(P/s')$. 
-\end{enumerate}
+\begin{lemma}\label{tran}
+Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the process state $P/s$. 
+Then for any $x\in \Sigma_I$, $y\in \Sigma_O\colon$ 
+\begin{align*}(n,x,y,n')\in h\Leftrightarrow &(y\in x\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee\\ &(y=\bot \wedge (s,x)\in {\text {\rm Fail}}(P)\wedge n'=n)\end{align*} 
 \end{lemma}
 
+\begin{proof}
+Let $s'=s.y\project \Sigma$.
+We consider the following two cases:
+\begin{itemize}
+\item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have  
+\begin{align*}(n,x,e,n')\in h\Leftrightarrow & e\in x\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)\\ \Leftrightarrow& e\in x\wedge s.e\in \trc(P)\wedge n'=G(P)/s.e\end{align*} 
+\item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive 
+\begin{align*}(n,x,\bot,n')\in h\Leftrightarrow & x \in {\text {\rm Ref}}(P/s)\wedge n'=n \\
+\Leftrightarrow & (s,x) \in {\text {\rm Fail}}(P)\wedge n'=n\end{align*} 
+\end{itemize} 
+\xbox
+\end{proof}
 
-The following lemmas are a direct consequence of Lemma~\ref{lemma:a}.
-
-
-%----------------------------------------------------------------------------------
-\begin{lemma}
-For any $s\in \Sigma^*$, 
-$$s\in {\text {\rm tr}}(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P))$$
-\end{lemma}
+%%----------------------------------------------------------------------------
 %-----------------------------------------------------------------------------
 
-%--------------------------------------------------------------------------------
-\begin{lemma}
-For any $s\in \Sigma^*$ and $x_k\in \Sigma_I$, 
-$$s\in {\text {\rm tr}}(P) \wedge  x_k\in {\text {\rm Ref}}(P/s)\Leftrightarrow \exists x\in \Sigma_I^*: x.x_k/s.\bot \in L(T(P))$$
-\end{lemma}
-%-------------------------------------------------------------------------------
+\begin{lemma}\label{trac}
 
+Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in L(T(P))\Rightarrow s\in\trc(P) \wedge \underline q\after x/y=G(P)/s.$$    
+\end{lemma}
+\begin{proof}
+We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and $x'/y'\in \Sigma\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$. 
+Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s',x',y',n)\in h$ and $n=\underline q\after x/y$. By Lemma~\ref{tran} we have $s'=s.y'\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$.
+\xbox
+\end{proof}%-----------------------------------------------------------------------------
+
+%-----------------------------------------------------------------------------
+
+\begin{lemma}\label{exte}
+Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then 
+\begin{eqnarray*}
+x.x'/y.y'\in L(T(P)) & \Leftrightarrow  &
+\big(y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee {}
+\\ & & \big(y'=\bot\wedge (y\project \Sigma, x')\in {\text {\rm Fail}}(P)\big).
+\end{eqnarray*}
+\end{lemma}
+
+\begin{proof}
+Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then by Lemma~\ref{trac}, we have $s=y\project \Sigma\in \trc(P)$ and $G(P)/s=\underline q\after x/y$. From Lemma~\ref{tran} we have the following:
+\[\begin{array}{lll}
+&&x.x'/y.y'\in L(T(P)) \\&\Leftrightarrow & \exists n'\in Q: (G(P)/s,x',y',n')\in h\\
+&\Leftrightarrow & (y'\in x'\wedge s.y'\in \trc(P))\vee (y'=\bot\wedge (s, x')\in {\text {\rm Fail}}(P)\big)\\
+&\Leftrightarrow & (y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee \big(y'=\bot\wedge (y\project \Sigma, x)\in {\text {\rm Fail}}(P)\big)\end{array}
+\]
+\end{proof}
+
+
+%----------------------------------------------------------------------------
+%----------------------------------------------------------------------------
+\begin{lemma}\label{cont}
+For any $s\in \Sigma^*$, 
+$$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
+\end{lemma}
+%
+%--------------------------------------------------------------------------------------------------
+\begin{proof}
+Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$ the length of $s$. Suppose $s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with $\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and $e\in\Sigma$. 
+Then \[\begin{array}{llll}
+&& s.e\in \trc(P)\\ 
+&\Leftrightarrow & s\in \trc(P)\wedge s.e\in \trc(P)\\
+&\Leftrightarrow &  \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge s.e\in \trc(P)\\
+&\Rightarrow & \exists x\in \Sigma_I^*: x.\{e\}/s.e\in L(T(P))&[{\text{Lemma~\ref{exte}}}]\\
+&\Rightarrow & \exists x\in \Sigma_I^*: x/s.e\in L(T(P))
+\end{array}
+\]
+ \[\begin{array}{llll}
+&& \exists x\in \Sigma_I^*: x/s.e\in L(T(P))\\ 
+&\Leftrightarrow & \exists x\in \Sigma_I^*\wedge \exists x'\in \Sigma_I: x/s\in L(T(P))\wedge x.x'/s.e\in L(T(P))\\
+&\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{exte}}}]\\
+\end{array}
+\]
+\xbox
+\end{proof}
+%----------------------------------------------------------------------------
+
+%---------------------------------------------------------------------------
+\begin{lemma}\label{conf}
+For any $s\in \Sigma^*$ and $x'\in \Sigma_I$, 
+$$(s,   x')\in {\text {\rm Fail}}(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(P))$$
+\end{lemma}
+\begin{proof}
+$\forall s\in \Sigma^*, x'\in \Sigma_I$: 
+\[\begin{array}{llll}
+&& \exists x\in \Sigma_I^*: x.x'/s.\bot\in L(T(P))&\\ 
+&\Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge x.x'/s.\bot\in L(T(P))&\\
+&\Leftrightarrow & (s,   x')\in {\text {\rm Fail}}(P)&[{\text {Lemma~\ref{exte} and ~\ref{cont}}}]
+
+\end{array}
+\]
+\xbox
+\end{proof}
+%------------------------------------------------------------------------------
 \begin{theorem}
-\label{th:sc1}
-Consider the signature $Sig_1$ of CSP processes over fixed alphabet $\Sigma$ and the 
-model map $T$ from CSP processes to finite state machines specified above.
-Then the satisfaction condition {\bf SC1} is valid in the sense that
-$$
-\forall P, Q\in Sig_1: P \lessdet_F Q \Leftrightarrow   T(Q) \preceq T(P),
-$$
-where $\lessdet_F$ denotes failures refinement and $\preceq$ denotes reduction.
+Let $P,Q$ be two CSP processes over the same alphabet $\Sigma$. Then\\
+$T(Q)\preceq T(P) \Leftrightarrow P\,\sqsubseteq_F\, Q$
 \end{theorem}
 \begin{proof}
-Applying the lemmas above, we can derive the following sequence of equivalence
-transformations.
-\begin{eqnarray*}
-T(Q)\preceq T(P) &\Leftrightarrow & L(T(Q))\subseteq L(T(P))
-\\ &\Leftrightarrow &
-\forall x/s\in L(T(Q)):   x/s\in  L(T(P))
-%%
-\\ &\Leftrightarrow &  
-\big(\forall x/s\in L(T(Q)): s\in\Sigma^* \Rightarrow x/s\in L(T(P)) \big) \wedge {}
-\\ & & 
-\big( \forall (x.x_k)/(s.\bot)\in L(T(Q)):  s\in\Sigma^* \Rightarrow 
-(x.x_k)/(s.\bot)\in L(T(P)) \big)
-%%
-\\ &\Leftrightarrow &  
-\big(\forall s\in\text{tr}(Q), x\in\{ z\in\Sigma_I^*~|~z/s\in L(T(Q)) \}:
-\\ & & \tabc
-s\in\text{tr}(P) \wedge x/s\in L(T(P))
-\big) \wedge {}
-\\ & & 
-\big(\forall s\in\text{tr}(Q), x\in\{ z\in\Sigma_I^*~|~z/s\in L(T(Q)) \}, 
-x_k\in\text{Ref}(Q/s):
-\\ & & \tabc
-s\in\text{tr}(P) \wedge x/s\in L(T(P)) \wedge x_k\in\text{Ref}(P/s)
-\big)
-%%
-\\ &\Leftrightarrow &  
-\big(\forall s\in\text{tr}(Q): s \in \text{tr}(P)\big) \wedge {}
-\\ & & \big(\forall s\in\text{tr}(Q), x_k\in\text{Ref}(Q/s): 
-s\in\text{tr}(P) \wedge x_k\in\text{Ref}(P/s)\big)
-%%
-\\ &\Leftrightarrow &  
-\forall s\in {\text {\rm tr}}(Q):   s\in{\text {\rm tr}}(P) \wedge {\text {\rm Ref}}(Q/s)\subseteq {\text {\rm Ref}}(P/s)
-%%
-\\ &\Leftrightarrow & P \lessdet_F Q
-\end{eqnarray*} 
+Suppose $T(Q)\preceq  T(P)$. Let $s\in \Sigma^*, x'\in \Sigma_I$. Then by Lemma~\ref{cont} and Lemma~\ref{conf}
+
+\[\begin{array}{lll}
+ s\in \trc(Q) &\Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(Q))\\
+&\Rightarrow& \exists x\in \Sigma_I^*:  x/s\in  L(T(P))\\
+&\Leftrightarrow &s\in \trc(P)\\
+\end{array}
+\]
+
+\[\begin{array}{lll}
+(s,   x')\in {\text {\rm Fail}}(Q) &\Leftrightarrow & \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(Q))\\
+&\Rightarrow& \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(P))\\
+&\Leftrightarrow &(s,   x')\in {\text {\rm Fail}}(P)\\
+\end{array}
+\]
+
+Hence $$T(Q)\preceq  T(P)\Rightarrow P\,\sqsubseteq_F\, Q$$
+
+Now suppose $P\,\sqsubseteq_F\, Q$. We prove by induction on $\#(x/y)$ that for any $x/y\in (\Sigma_I\times \Sigma_O)^*$,  $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds. 
+It is trivial if $\#(x/y)=0$. Suppose $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds for any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k\ge 0$. 
+For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\in \Sigma_I\times \Sigma_O$. Let $s=y\project \Sigma$ and $s'=(y.y')\project \Sigma$. Then by Lemma~\ref{exte} and $ P\,\sqsubseteq_F\, Q$ we have 
+\[\begin{array}{lll}
+&&x.x'/y.y'\in L(T(Q))\\&\Rightarrow& x/y\in L(T(Q))\wedge \big((y'\in x'\wedge s'\in \trc(Q))\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(Q))\big)\\
+&\Rightarrow& x/y\in L(T(P))\wedge \big((y'\in x'\wedge s'\in \trc(P)\big)\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(P))\big)\\
+ &\Rightarrow& x.x'/y.y'\in L(T(P)) \\
+\end{array}
+\]
+Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
 \xbox
 \end{proof}
  
