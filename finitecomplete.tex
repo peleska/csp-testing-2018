@@ -258,14 +258,38 @@ as follows.
 \begin{eqnarray*}
 tc_\text{CSP} & = & tc(\ii q)
 \\
-tc(q) & = & \big( e : \{ a\in in(q)\cup\{\bot\}~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \} \bullet {}
-\\ & & \tabd
-e \then tc(q\after (in(q)/e)) \big)
+tc(q) & = & \big( e :  A(q) \then  tc(q\after (in(q)/e)) \big)
 \\ & & \extchoice
-\\ & & \big( e : \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \} \bullet e \then \tick \then \Skip \big)
+ \big( e : A_\text{PASS}(q)   \then \tick \then \Skip \big)
 \\ & & \extchoice
-\\ & & \big( e : \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \} \bullet e \then \dag \then \Skip \big)
+ \big( e : A_\text{FAIL}(q) \then \dag \then \Skip \big)
+\\ & & 
+\\
+A(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \}
+\\
+A_\text{PASS}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \}
+\\
+A_\text{FAIL}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}
 \end{eqnarray*}
+
+Intuitively speaking, $tc_\text{CSP}$ offers in each test step the same events to 
+the CSP process to be tested as the FSM test case offers to the FSM under test. 
+These events are specified in each non-terminating test step by $in(q)$, where
+$q$ is the current state of the FSM test case $tc_\text{FSM}$. While the FSM test 
+case offers these events a single set-valued member of the input alphabet $\Sigma_I$
+to the FSM under test, the CSP test offers the same to the SUT by means of an external choice, so that it just depends on the SUT which event to choose. In addition to the
+events from $in(q)$, the CSP test case 
+accepts the event $\bot$ which is not shared with
+the SUT but represents a timeout event provided by the testing environment to indicate
+that the SUT is blocked without accepting any of the events in $in(q)$.
+
+The events offered/accepted by the CSP test in state $tc(q)$ are partitioned into
+3 sets $A(q)$, $A_\text{PASS}(q)$, and $A_\text{FAIL}(q)$. The disjointness of these
+sets is a consequence of the fact that the FSM test case is observable: if 
+$tc_\text{FSM}$ can transit, for example, from $q$ to FAIL with I/O $in(q)/a$, 
+then there exists no other transition from $q$ which is also 
+labelled by $in(q)/a$.
+
 
 
 % ..........................................................................
@@ -386,13 +410,13 @@ Since $tc_\text{FSM}$ is output complete,
 $in(q')/\bot \in L(q')$. Depending on the nature of the test case, 
 $q'\after (in(q')/\bot)$ is one of the deadlock states PASS, FAIL, or it is a
 non-blocking FSM state, say, $q''$. Since $tc_\text{FSM}$ is observable, however, 
-this post-state is uniquely determined. Observability of $tc_\text{FSM}$ 
-implies further that the sets $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a)\notin \{\text{PASS},\text{FAIL}\}$, $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \}$, and $\{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}$
-used in the definition of $tc(q)$ are disjoint. As a consequence, $T^*(tc_\text{FSM})$
+this post-state is uniquely determined. 
+Since the sets $A(q)$, $A_\text{PASS}(q)$, and $A_\text{FAIL}(q)$ 
+are disjoint,   $T^*(tc_\text{FSM})$
 has exactly one choice to proceed and will come to the post-states that are analogous to those of $tc_\text{FSM}$: if $tc_\text{FSM}$ terminates in PASS(FAIL), then 
 $T^*(tc_\text{FSM})$ will produced the events $\bot$ followed by 
-$\tick(\dag)$ and terminate. If $tc_\text{FSM}$  transits to $q''$, CSP test case
-$T^*(tc_\text{FSM})$ will perform $\dag$ as well and continue like process 
+$\tick(\dag)$ and terminate. If $tc_\text{FSM}$  transits with $in(q)/e$ to $q''$, CSP test case
+$T^*(tc_\text{FSM})$ will perform $e\in A(q)$ as well and continue like process 
 $tc(q'\after(in(q')/\bot)$ with $q'\after(in(q')/\bot) = q''$. 
 Since $\bot,\tick,\dag$ are not contained in $\Sigma$, the CSP process $P$ 
 cannot block these transitions of  $T^*(tc_\text{FSM})$, since we have assumed $P$ to be non-divergent. This shows that $tc_\text{FSM}$ and $T^*(tc_\text{FSM})$ engage into the same pass/fail/continue step, as was to be shown. This proves assertions~1,2,4 
