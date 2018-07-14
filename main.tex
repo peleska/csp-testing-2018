@@ -16,7 +16,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\documentclass[runningheads,a4paper]{llncs}
+\documentclass[runningheads]{fac}
 
 \usepackage[cmex10]{amsmath}
 \usepackage{amssymb}
@@ -30,8 +30,8 @@
 \urldef{\mailsc}\path|adenilso@icmc.usp.br|
 
 
-\newcommand{\keywords}[1]{\par\addvspace\baselineskip
-\noindent\keywordname\enspace\ignorespaces#1}
+%\newcommand{\keywords}[1]{\par\addvspace\baselineskip
+%\noindent\keywordname\enspace\ignorespaces#1}
 
 \usepackage{float}
 \usepackage{lscape}
@@ -262,47 +262,51 @@
 \newcommand{\primem}{\mathbf{prime}}
 
 
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{corollary}{Corollary}[section]
+
+
+\newcounter{examplectr}
+\newenvironment{example}[1]
+{
+{\refstepcounter{examplectr}
+
+\medskip
+\noindent
+\bf Example~\theexamplectr.\label{#1}}
+}
+{
+\unskip\nobreak\hfil\penalty50
+      \hskip2em\hbox{}\nobreak\hfil$\Box$%
+      \parfillskip=0pt \finalhyphendemerits=0 \par
+}
+
+
+\title{Finite Complete Suites for CSP Refinement Testing}
+
+
+\author{
+Ana Cavalcanti,
+Wen-ling Huang,
+Jan Peleska,
+and
+Adenilso Simao
+}
+
+\correspond{Jan Peleska. University of Bremen, 
+           Department of Mathematics and Computer   Science.
+            e-mail: peleska@uni-bremen.de, Tel: +49 421 218 63961, Fax: +49 421 218 3054}
+             
+
+\pubyear{xxxx}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+
+
 % ===========================================================================
 \begin{document}
 
-\mainmatter  % start of an individual contribution
-
-% first the title is needed
-\title{Finite Complete Suites for CSP Refinement Testing}
-
-% a short form should be given in case it is too long for the running head
-\titlerunning{CSP Refinement Testing}
-
-% the name(s) of the author(s) follow(s) next
-%
-% NB: Chinese authors should write their first names(s) in front of
-% their surnames. This ensures that the names appear correctly in
-% the running heads and the author index.
-%
-\author{
-Ana Cavalcanti\inst{1}
-\and
-Wen-ling Huang\inst{2}
-\and
-Jan Peleska\inst{2}
-\and
-Adenilso Simao\inst{3}
-}
-%
-\authorrunning{Ana Cavalcanti, Wen-ling Huang, Jan Peleska, and Adenilso Simao}
-
-
-\institute{
-University of York, United Kingdom\\
-\mailsb
-\and
-University of Bremen, Germany\\
-\mailsa
-\and
-University of S{\~a}o Paulo, Brazil\\
-\mailsc}
-
- 
 \maketitle 
 
 
@@ -327,7 +331,7 @@ University of S{\~a}o Paulo, Brazil\\
 \input{conclusion}
 
 % =====================================================================================
-\bibliographystyle{splncs03}
+\bibliographystyle{alpha}
 \bibliography{references,jp}
 
 % =====================================================================================

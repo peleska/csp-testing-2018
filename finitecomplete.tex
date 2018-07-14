@@ -52,7 +52,7 @@ We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$ are
 % ................................................................................... 
 
 
-\begin{example}\label{ex:b}
+\begin{example}{ex:b}
 For the CSP process $P$ and its transition graph $G(P)$ discussed in Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}. 
 For displaying its transitions, we used notation
 $$
@@ -72,7 +72,6 @@ $$
 \text{Node\_0} \xrightarrow{\{a,b,c\}/a} \text{Node\_2} \\
 \end{array}
 $$
-\xbox
 \end{example}
 
 
@@ -96,7 +95,6 @@ We consider the following two cases:
 \begin{align*}(n,x,\bot,n')\in h\Leftrightarrow & x \in {\text {\rm Ref}}(P/s)\wedge n'=n \\
 \Leftrightarrow & (s,x) \in {\text {\rm Fail}}(P)\wedge n'=n\end{align*} 
 \end{itemize} 
-\xbox
 \end{proof}
 
 %%----------------------------------------------------------------------------
@@ -109,7 +107,6 @@ Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in 
 \begin{proof}
 We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and $x'/y'\in \Sigma\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$. 
 Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s',x',y',n)\in h$ and $n=\underline q\after x/y$. By Lemma~\ref{tran} we have $s'=s.y'\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$.
-\xbox
 \end{proof}%-----------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------
@@ -157,7 +154,6 @@ Then \[\begin{array}{llll}
 &\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{exte}}}]\\
 \end{array}
 \]
-\xbox
 \end{proof}
 %----------------------------------------------------------------------------
 
@@ -175,7 +171,6 @@ $\forall s\in \Sigma^*, x'\in \Sigma_I$:
 
 \end{array}
 \]
-\xbox
 \end{proof}
 %------------------------------------------------------------------------------
 \begin{theorem}
@@ -211,7 +206,6 @@ For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\
 \end{array}
 \]
 Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
-\xbox
 \end{proof}
  
 
@@ -246,11 +240,10 @@ M\ \pass\ tc_\text{FSM} \equiv
 \big).
 $$
 
-\begin{example}
+\begin{example}{ex:xx}
 Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
 for the same input and output alphabets as defined for  the FSM presented in Example~\ref{ex:b}. The test case is passed by the FSM from Example~\ref{ex:b}, because 
 intersecting the two state machines results in an FSM which always reaches the PASS state.
-\xbox
 \end{example}
 
 
@@ -344,7 +337,7 @@ labelled by $in(q)/a$.
 
 
 % ..........................................................................
-\begin{example}
+\begin{example}{ex:zz}
 The FSM test case $tc_\text{FSM}$
 shown in Fig.~\ref{fig:fsm0tc} is mapped by $T^*$ to the following
 CSP test case.
@@ -373,7 +366,6 @@ P_5 & = & \big( e : \{ a,b,\bot \}\bullet e\then \dag\then\Skip  \big)
 \extchoice
 \big( c\then\tick\then \Skip \big)
 \end{eqnarray*}
-\xbox
 \end{example}
 
 The following theorem shows the validity of the satisfaction condition {\bf SC2}
@@ -489,7 +481,6 @@ With the same argument as in Case~1, we conclude that $tc_\text{FSM}$ and
 $tc(q')$ can perform equivalent test steps, leading to PASS or FAIL deadlock state,
 or to continuation of the test in the new state $q'\after(in(q')/e)$.
 This proves the induction step for assertions 1,2,4 in Case~2 and completes the proof.
-\xbox
 \end{proof}
 
 % ==========================================================================
