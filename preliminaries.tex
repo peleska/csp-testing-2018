@@ -3,47 +3,48 @@
 \label{section:preliminaries}
 % =========================================================================
 
-In this section, we present the background material relevant to our work. 
+In this section, we present the background material relevant to our work.
 
 % =========================================================================
 \subsection{Complete Test Suites}
 \label{sec:fsmfm}
 % =========================================================================
 
-We use the term \emph{signature} to denote a collection of comparable models represented
-in an arbitrary formalism. In this article, signatures represent sets of
-finite state machines
-over fixed input and output alphabets, or CSP processes with finite state, represented
-by their normalised transition graphs (see Section~\ref{sec:ntg}).
+We use the term \emph{signature} to denote a collection of comparable models
+represented in an arbitrary formalism. In this article, signatures represent
+sets of finite state machines over fixed input and output alphabets, or CSP
+processes with finite state, represented by their normalised transition
+graphs (see Section~\ref{sec:ntg}).
 
-
-
-Given a signature $Sig$  of models, a  \emph{fault model} ${\cal F} = (M,\le,Dom)$
-specifies a \emph{reference model} $M\in Sig$, a \emph{conformance relation}
-$\le\ \subseteq Sig\times Sig$ between models, and a \emph{fault domain}
-$Dom\subseteq Sig$. This terminology follows~\cite{gotzhein_fault_1996}, where
-fault models were originally introduced in the context of finite state machine testing.
-Note that fault domains may contain both models conforming to the reference model and
-models violating the conformance relation. Note further that the reference model $M$
-is not necessarily a member of the fault domain. For example, $M$ could be nondeterministic, while only deterministic implementation behaviours might be  considered in the fault domain.
+Given a signature $Sig$  of models, a  \emph{fault model} ${\cal F} =
+(M,\le,Dom)$ specifies a \emph{reference model} $M\in Sig$, a
+\emph{conformance relation} $\le\ \subseteq Sig\times Sig$ between models,
+and a \emph{fault domain} $Dom\subseteq Sig$. This terminology
+follows~\cite{gotzhein_fault_1996}, where fault models have been originally
+introduced in the context of testing of finite state machines. Note that
+fault domains may contain both models conforming to the reference model and
+models violating the conformance relation. Note further that the reference
+model $M$ is not necessarily a member of the fault domain, although a model
+of the SUT behaviour is. For example, $M$ could be nondeterministic, while
+only deterministic implementation behaviours might be considered in the fault
+domain.
 %By $F(Sig,\le)$ we denote the set of all fault models ${\cal F}$
 %defined for
 %signature $Sig$ and conformance relation $\le$.
 
-Let $\tc(Sig)$ denote the set of all \emph{test cases} applicable to
-elements of $Sig$. The abstract notion of test cases defined here only requires the existence of
- a  relation $\pass\subseteq Sig\times \tc(Sig)$.
-For
-$(M,U)\in\pass$, the infix notation $M\ \pass\ U$ is used, and   interpreted as
-{\it `Model $M$ passes the test case $U$'}.
-If $(M,U)\not\in\pass$ holds, this is abbreviated by $M\ \tfail\ U$.
+Let $\tc(Sig)$ denote the set of all \emph{test cases} applicable to elements
+of $Sig$. This abstract notion of test case requires only the existence of a
+relation $\pass\subseteq Sig\times \tc(Sig)$. For $(M,U)\in\pass$, the infix
+notation $M\ \pass\ U$ is used, and interpreted as {\it `model $M$ passes the
+test case $U$'}. If $(M,U)\not\in\pass$ holds, this is abbreviated by $M\
+\tfail\ U$. Our specific notion of test case for CSP models is elaborated in
+Section~\ref{}. \fxwarning{alcc: TBD}
 
-
-
-
-A \emph{test suite} $\TS \subseteq \tc(Sig)$ denotes  a set of test cases.
-A model $M$ \emph{passes the test suite} $\TS$, also written as $M\ \pass\ \TS$,
-if and only if $M\ \pass\ U$ for all $U\in \TS$. A test suite $\TS$ is called \emph{complete} for fault model ${\cal F} = (M,\le,Dom)$, if and only if the following properties hold.
+A \emph{test suite} $\TS \subseteq \tc(Sig)$ denotes  a set of test cases. A
+model $M$ \emph{passes the test suite} $\TS$, also written as $M\ \pass\
+\TS$, if, and only if, $M\ \pass\ U$ for all $U\in \TS$. A test suite $\TS$
+is called \emph{complete} for fault model ${\cal F} = (M,\le,Dom)$, if, and
+only if, the following properties hold.
 \begin{enumerate}
 \item If a member $M'$ of the fault domain  conforms to the reference model $M$,
 it passes the test suite, that is,
