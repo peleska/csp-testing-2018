@@ -37,8 +37,8 @@ of $Sig$. This abstract notion of test case requires only the existence of a
 relation $\pass\subseteq Sig\times \tc(Sig)$. For $(M,U)\in\pass$, the infix
 notation $M\ \pass\ U$ is used, and interpreted as {\it `model $M$ passes the
 test case $U$'}. If $(M,U)\not\in\pass$ holds, this is abbreviated by $M\
-\tfail\ U$. Our specific notion of test case for CSP models is elaborated in
-Section~\ref{}. \fxwarning{alcc: TBD}
+\tfail\ U$. Our specific notion of test cases for CSP models is elaborated in
+Section~\ref{sec:csptc}.
 
 A \emph{test suite} $\TS \subseteq \tc(Sig)$ denotes  a set of test cases. A
 model $M$ \emph{passes the test suite} $\TS$, also written as $M\ \pass\
@@ -174,13 +174,20 @@ the more nondeterministic is the behaviour in state $P/s$. If $P/s$ is determini
 its refusals coincide with the set of subsets of $\Sigma - [P/s]^0$, including the
 empty set. Since the refusals of each process state are
 subset-closed~\cite{Hoare:1985:CSP:3921,Roscoe2010}, $\refs(P/s)$ can be re-constructed
-by knowing the set of \emph{maximal refusals} $\maxrefs(P/s)\subseteq\refs(P/s)$ (we also write $\maxrefs(n) \subseteq r(n)$ using transition graph nodes instead of
-process states) and then  building the subset closure. More formally, the maximal refusals
-are defined as
+by knowing the set of \emph{maximal refusals} $\maxrefs(P/s)\subseteq\refs(P/s)$.
+The maximal refusals
+are formally defined as
 $$
-\maxrefs(n) = \{ R \in\refs(n)~|~\forall R'\in r(n) - \{ R\}: R \not\subseteq R'\}
+\maxrefs(P/s) = \{ R \in\refs(P/s)~|~\forall R'\in \refs(P/s) - \{ R\}: R \not\subseteq R'\}
 $$
-
+Conversely, with the maximal refusals at hand, we can reconstruct the refusals by subset-closure:
+$$
+\refs(P/s) = \{ R'\in\power(\Sigma)~|~\exists R\in \maxrefs(P/s): R'\subseteq R \}.
+$$ 
+As with refusals, we also use the transition graph-oriented notation 
+$\maxrefs(n) \subseteq r(n)$ to denote the maximal refusals 
+associated with graph state $n$: if $n$ is the state reached in the transition graph by following the edge labels in trace $s$, then $\maxrefs(n) = \maxrefs(P/s)$.
+ 
 Well-formed normalised transition graphs must not refuse an event of the fan-out
 with {\it every} refusal applicable in this state; more formally,
 \begin{equation}
@@ -208,7 +215,7 @@ with {\it every} refusal applicable in this state; more formally,
 %In this condition, $\dom~t$ denotes the domain of function $t$.
 
 By construction, normalised transition graphs reflect the \emph{failures semantics} of finite-state CSP processes:
-the traces $s$ of a process are exactly the sequences of labels associated
+the traces $s$ of a process are exactly the sequences of edge labels associated
 with paths through the transition graph,
 starting at $\ii n$. The pairs $(s,R)$ with $s\in\trc(P)$ and
 $R\in r(G(P)/s))$ represent the failures of $P$.
