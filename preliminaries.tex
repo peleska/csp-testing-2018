@@ -64,39 +64,74 @@ case $U\in\TS$ is finite in the sense that it terminates after a finite number o
 It is trivial to see that, if $\TS$ is complete  for   ${\cal F} = (M,\le,Dom)$
 and $Dom'\subseteq Dom$, then $\TS$ is also complete for ${\cal F}' = (M,\le,Dom')$.
 
-
-
 % ============================================================================
 \subsection{Translation of Test Cases and Test Suites}
 \label{sec:transltt}
 
-Let $Sig_1$ and $Sig_2$ be two signatures with conformance relations $\le_1$ and $\le_2$,
-and test case relations $\pass_1$ and $\pass_2$, respectively.
-A function $T:\underline{Sig_1} \fun Sig_2$ defined on a sub-domain $\underline{Sig_1} \subseteq Sig_1$
- is called
-a \emph{model map}, and a function $T^*:\tc(Sig_2) \fun \tc(Sig_1)$ is called a \emph{test case map}. Note that models and test cases are mapped in opposite directions
-(see Fig.~\ref{fig:satisfaction-relation}).
-The pair $(T,T^*)$ fulfils the \emph{satisfaction condition} if and only if the following conditions {\bf SC1} and {\bf SC2} are fulfilled.
-\begin{description}
-\item[\bf SC1] The model map is compatible with the conformance relations under consideration, in the sense that
-$$
-\forall {\cal S},{\cal S}'\in \underline{Sig_1}: {\cal S}' \le_1 {\cal S} \Leftrightarrow
-T({\cal S}') \le_2 T({\cal S}),
-$$
-so   the left-hand side diagram   in Fig.~\ref{fig:satisfaction-relation} commutes due to the fact that
-$T;\le_2 = \le_1;T$.\footnote{Operator ``;'' denotes the relational composition defined for
-functions or relations $f\subseteq A\times B$, $g\subseteq B\times C$ by
-$f;g = \{(a,c)\in A\times C~|~\exists b\in B: (a,b)\in f \wedge (b,c)\in g\}$.
-Note that $f;g$ is evaluated from left to right (like composition of code fragments),
-as opposed to right-to-left evaluation which is usually denoted by $g\circ f$.}
+Let $Sig_1$ and $Sig_2$ be two signatures with conformance relations $\le_1$
+and $\le_2$, and test case relations $\pass_1$ and $\pass_2$, respectively. A
+function $T:\underline{Sig_1} \fun Sig_2$ defined on a sub-domain
+$\underline{Sig_1} \subseteq Sig_1$ is called a \emph{model map}, and a
+function $T^*:\tc(Sig_2) \fun \tc(Sig_1)$ is called a \emph{test case map}.
+Note that models and test cases are mapped in opposite directions (see
+Fig.~\ref{fig:satisfaction-relation}). Also, for $T$, we consider a
+sub-domain of $Sig_1$ since it may be the case that the map is not defined
+for the whole of $Sig_1$. For example, in our case, we are interested in
+finite-state CSP processes only and their translation to graphs described in
+the next section.
 
-\item[\bf SC2] Model map and test case map preserve the $\pass$-relationship in the sense that
-$$
-\forall {\cal S}\in \underline{Sig_1}, U \in\tc(Sig_2): T({\cal S})\ \pass_2\ U \Leftrightarrow {\cal S}\ \pass_1\ T^*(U),
-$$
-so the right-hand side diagram   in Fig.~\ref{fig:satisfaction-relation} commutes, due to the fact that
-$\pass_1 = T;\pass_2;T^*$.
+The pair $(T,T^*)$ fulfils the \emph{satisfaction condition} if, and only if,
+the following conditions are fulfilled.
+%
+\begin{description}
+  \item[\bf SC1] The model map is compatible with the conformance relations
+      under consideration, in the sense that
+  $$
+  \forall {\cal S},{\cal S}'\in \underline{Sig_1}: {\cal S}' \le_1 {\cal S} \Leftrightarrow
+  T({\cal S}') \le_2 T({\cal S}),
+  $$
+  so   the left-hand side diagram   in Fig.~\ref{fig:satisfaction-relation}
+  commutes due to the fact that $T;\le_2 = \le_1;T$.\footnote{We note that
+  the operator ``;'' denotes the relational composition defined for
+  functions or relations $f\subseteq A\times B$, $g\subseteq B\times C$ by
+  $f;g = \{(a,c)\in A\times C~|~\exists b\in B: (a,b)\in f \wedge (b,c)\in
+  g\}$. Note that $f;g$ is evaluated from left to right (like composition
+  of code fragments), as opposed to right-to-left evaluation which is
+  usually denoted by $g\circ f$.}
+
+  \item[\bf SC2] The model map and the test case map preserve the
+      $\pass$-relationship in the sense that
+  $$
+  \forall {\cal S}\in \underline{Sig_1}, U \in\tc(Sig_2): T({\cal S})\ \pass_2\ U \Leftrightarrow {\cal S}\ \pass_1\ T^*(U),
+  $$
+  so the right-hand side diagram   in Fig.~\ref{fig:satisfaction-relation}
+  commutes, due to the fact that $\pass_1 = T;\pass_2;T^*$.
 \end{description}
+% ============================================================================
+The following theorem is a direct consequence
+of~\cite[Theorem~2.1]{Huang2017}.
+%
+\begin{theorem}
+  \label{th:theorytranslation}
+  With the notation introduced above, let  $(T,T^*)$ fulfil the satisfaction condition.
+  Suppose that $\TS_2 \subseteq TC(Sig_2)$ is a complete test suite
+  for fault model ${\cal F}_2 = ({\cal S}_2,\le_2,Dom_2)$. Define fault model ${\cal F}_1$ on
+  $\underline{Sig}_1$ by
+  $$
+  {\cal F}_1 = ({\cal S}_1,\le_1,Dom_1),\ \text{such that}\
+  T({\cal S}_1)  =  {\cal S}_2\ \text{and}\
+  Dom_1  =  \{ {\cal S}~|~T({\cal S})\in Dom_2 \}.
+  $$
+  Then
+  $$
+  \TS_1 = T^*(\TS_2)
+  $$
+  is a complete test suite with respect to fault model ${\cal F}_1$.
+  \xbox
+\end{theorem}
+%
+This theorem supports our justification of testing approaches for finite
+state machines in the context of CSP.
 
 % ............................................................................
 \begin{figure}
@@ -108,86 +143,78 @@ $\pass_1 = T;\pass_2;T^*$.
  \end{figure}
 % .............................................................................
 
-
-
-% ============================================================================
-
- The following theorem is a direct consequence of~\cite[Theorem~2.1]{Huang2017}.
-
-\begin{theorem}\label{th:theorytranslation}
-With the notation introduced above, let  $(T,T^*)$ fulfil the satisfaction condition.
-Suppose that $\TS_2 \subseteq TC(Sig_2)$ is a complete test suite
-for fault model ${\cal F}_2 = ({\cal S}_2,\le_2,Dom_2)$. Define fault model ${\cal F}_1$ on
-$\underline{Sig}_1$ by
-$$
-{\cal F}_1 = ({\cal S}_1,\le_1,Dom_1),\ \text{such that}\
-T({\cal S}_1)  =  {\cal S}_2\ \text{and}\
-Dom_1  =  \{ {\cal S}~|~T({\cal S})\in Dom_2 \}.
-$$
-Then
-$$
-\TS_1 = T^*(\TS_2)
-$$
-is a complete test suite with respect to fault model ${\cal F}_1$.
-\xbox
-\end{theorem}
-
-
-
-
-
 % =========================================================================
 \subsection{CSP and Refinement}
 
-\subsubsection*{Communicating Sequential Processes} @todo
+% =========================================================================
 
-% -------------------------------------------------------------------------
+\subsubsection*{Communicating Sequential Processes} @todo
+\fxwarning{alcc: I can make this small contribution.}
+
+% =========================================================================
 \subsubsection*{Normalised Transition Graphs for CSP Processes}
 \label{sec:ntg}
 
-As shown in~\cite{Roscoe:1994:CME:197600}, any finite-state CSP process $P$ can be represented by a \emph{normalised transition graph}
+As shown in~\cite{Roscoe:1994:CME:197600}, any finite-state CSP process $P$
+can be represented by a \emph{normalised transition graph}
 $$
 G(P) = ( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, r : N \fun \mathbb{P}\mathbb{P}(\Sigma)),
 $$
-with nodes $N$, initial node $\ii n\in N$, and process alphabet $\Sigma$. The partial \emph{transition function} $t$ maps a node $n$ and an event $e\in\Sigma$ to its successor node $t(n,e)$, if and only if $(n,e)$ are in the domain of $t$. Normalisation of $G(P)$ is reflected
-by the fact that $t$ is a function. A finite sequence of events $s\in\Sigma^*$
-is a \emph{trace} of $P$, if there is a path through $G(P)$ starting  at $\ii n$ whose edge labels coincide
-with $s$. The set of traces of $P$ is denoted by $\trc(P)$. If $s\in\trc(P)$, then the process corresponding to $P$ after having executed $s$ is denoted by $P/s$. Since
-$G(P)$ is normalised, there is a unique node to be  reached by applying the events from
-$s$ one by one, starting in $\ii n$. Therefore, the notation $G(P)/s$  is also well-defined.
+with nodes $N$, initial node $\ii n\in N$, and process alphabet $\Sigma$. The
+partial \emph{transition function} $t$ maps a node $n$ and an event
+$e\in\Sigma$ to its successor node $t(n,e)$, if, and only if, $(n,e)$ is in
+the domain of $t$, that is, there is a transition from $n$ with label $e$.
+Normalisation of $G(P)$ is reflected by the fact that $t$ is a function.
 
+A finite sequence of events $s\in\Sigma^*$ is a \emph{trace} of $P$, if there
+is a path through $G(P)$ starting  at $\ii n$ whose edge labels coincide with
+$s$. The set of traces of $P$ is denoted by $\trc(P)$. If $s\in\trc(P)$, then
+the process corresponding to $P$ after having executed $s$ is denoted by
+$P/s$. Since $G(P)$ is normalised, there is a unique node reached by applying
+the events from $s$ one by one, starting in $\ii n$. Therefore, $G(P)/s$  is
+also well-defined.
 
-By $[n]^0$ we denote the \emph{fan-out} of $n$, that is, the set of events occurring as transition labels in any outgoing transitions.
+By $[n]^0$ we denote the \emph{fan-out} of $n$:~the set of events occurring
+as labels in any outgoing transitions.
 $$
 [n]^0 = \{ e\in\Sigma~|~(n,e)\in\dom~t \}
 $$
-We also use this notation for CSP processes: $[P]^0$ is the set of events $P$ may engage into.
+We also use this notation for CSP processes:~$[P]^0$ is the set
+of events $P$ may engage into, in other words, the initials of $P$ after the
+empty trace of events, that is, $initials(P/\langle\rangle)$ as defined
+in~\cite{Roscoe2010}.
 
+The total function $r$ maps each node $n$ to its \emph{refulsals} $r(n) =
+\refs(n)$. Each element of $r(n)$ is a set of events that the CSP process $P$
+might refuse to engage into, when in a process state corresponding to $n$.
+The number of refusal sets in $\refs(P/s)$ specifies the degree of
+nondeterminism that is present in process state $P/s$: the more refusal sets
+contained in  $\refs(P/s)$, the more nondeterministic is the behaviour in
+state $P/s$. If $P/s$ is deterministic, its refusals coincide with the set of
+subsets of $\Sigma - [P/s]^0$, including the empty set.
 
-
-
-The total function $r$ maps each node $n$ to its \emph{refulsals} $r(n) = \refs(n)$ Each element of $r(n)$ is a set of events that
-CSP process $P$ might refuse to engage into, when in a process state corresponding to $n$.
-The number of refusal sets contained in $\refs(P/s)$ specifies the degree of nondeterminism
-which is present in process state $P/s$: the more refusal sets contained in  $\refs(P/s)$,
-the more nondeterministic is the behaviour in state $P/s$. If $P/s$ is deterministic,
-its refusals coincide with the set of subsets of $\Sigma - [P/s]^0$, including the
-empty set. Since the refusals of each process state are
-subset-closed~\cite{Hoare:1985:CSP:3921,Roscoe2010}, $\refs(P/s)$ can be re-constructed
-by knowing the set of \emph{maximal refusals} $\maxrefs(P/s)\subseteq\refs(P/s)$.
-The maximal refusals
-are formally defined as
+For finite CSP processes, since the refusals of each process state are
+subset-closed~\cite{Hoare:1985:CSP:3921,Roscoe2010}, $\refs(P/s)$ can be
+re-constructed by knowing the set of \emph{maximal refusals}
+$\maxrefs(P/s)\subseteq\refs(P/s)$. More formally, the maximal refusals
+$\maxrefs(P/s)$ are defined as
 $$
 \maxrefs(P/s) = \{ R \in\refs(P/s)~|~\forall R'\in \refs(P/s) - \{ R\}: R \not\subseteq R'\}
 $$
 Conversely, with the maximal refusals at hand, we can reconstruct the refusals by subset-closure:
 $$
 \refs(P/s) = \{ R'\in\power(\Sigma)~|~\exists R\in \maxrefs(P/s): R'\subseteq R \}.
-$$ 
-As with refusals, we also use the transition graph-oriented notation 
-$\maxrefs(n) \subseteq r(n)$ to denote the maximal refusals 
-associated with graph state $n$: if $n$ is the state reached in the transition graph by following the edge labels in trace $s$, then $\maxrefs(n) = \maxrefs(P/s)$.
- 
+$$
+To see that this approach works only for finite CSP processes, consider the
+example where $\Sigma$ is infinite. In this case,
+$\maxrefs(STOP/\langle\rangle)$ is empty, and so we cannot use this set to
+calculate the refusals of $STOP$, that is, $\refs(STOP/\langle\rangle)$ as
+defined above. As with refusals, we also use the transition graph-oriented
+notation $\maxrefs(n) \subseteq r(n)$ to denote the maximal refusals
+associated with graph state $n$: if $n$ is the state reached in the
+transition graph by following the edge labels in trace $s$, then $\maxrefs(n)
+= \maxrefs(P/s)$.
+
 Well-formed normalised transition graphs must not refuse an event of the fan-out
 with {\it every} refusal applicable in this state; more formally,
 \begin{equation}
