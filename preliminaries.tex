@@ -215,20 +215,14 @@ associated with graph state $n$: if $n$ is the state reached in the
 transition graph by following the edge labels in trace $s$, then $\maxrefs(n)
 = \maxrefs(P/s)$.
 
-Well-formed normalised transition graphs must not refuse an event of the fan-out
-with {\it every} refusal applicable in this state; more formally,
+Well-formed normalised transition graphs must not refuse an event of the
+fan-out of a state in {\it every} refusal applicable in this state; more
+formally,
 \begin{equation}
 \label{eq:wellformedg}
 \forall n\in N, e\in\Sigma: (n,e)\in\dom~t \Rightarrow
 \exists R\in \maxrefs(n): e\not\in R
 \end{equation}
-
-
-
-
-
-
-
 %The total function $a$ maps each node to its set of \emph{minimal acceptances}:
 %if $n\in N$ corresponds to a deterministic process state of $P$, $ac(n)$ contains a single acceptance $A\subseteq \Sigma$, and every $e\in A$ is in one-one-correspondence with a transition $t(n,e)$. If $n$ corresponds to a nondeterministic process state, $ac(n)$ contains at least two acceptances $A_1, A_2, \dots, A_k$. This reflects the fact that in a nondeterministic state, $P$ must accept all events of one acceptance
 %$A_i, i \in \{ 1,\dots,k\}$, but may refuse all events $e$ from
@@ -240,13 +234,11 @@ with {\it every} refusal applicable in this state; more formally,
 %\forall n\in N: (n,e)\in\dom~t \Leftrightarrow e\in\bigcup ac(n)
 %\end{equation}
 %In this condition, $\dom~t$ denotes the domain of function $t$.
-
-By construction, normalised transition graphs reflect the \emph{failures semantics} of finite-state CSP processes:
-the traces $s$ of a process are exactly the sequences of edge labels associated
-with paths through the transition graph,
-starting at $\ii n$. The pairs $(s,R)$ with $s\in\trc(P)$ and
-$R\in r(G(P)/s))$ represent the failures of $P$.
-
+By construction, normalised transition graphs reflect the \emph{failures
+semantics} of finite-state CSP processes:~the traces $s$ of a process are
+exactly the sequences of transition labels associated with paths through the
+transition graph, starting at $\ii n$. The pairs $(s,R)$ with $s\in\trc(P)$
+and $R\in r(G(P)/s)$ represent the failures of $P$.
 
 % .....................................................................................
  \begin{figure}
@@ -260,10 +252,8 @@ $R\in r(G(P)/s))$ represent the failures of $P$.
  \end{figure}
 % .......................................................................................
 
-
-
 \begin{example}{ex:a}
-Consider CSP process
+Consider the CSP process $P$ defined below.
 \begin{eqnarray*}
 P & = & a \then (Q\intchoice R)
 \\
@@ -271,10 +261,15 @@ Q & = & a \then P \extchoice c \then P
 \\
 R & = & b \then P \extchoice c \then R
 \end{eqnarray*}
-Its transition graph $G(P)$ is shown in Fig.~\ref{fig:tga}. Process state $P$ is represented there as Node\_0, with $\{ b,c\}$ as the only maximal refusal, since event $a$ can never be refused, and no other events are accepted. Having engaged into $a$, the transition emanating from Node\_0 leads to Node\_2 representing  the process state
-$P/a = Q\intchoice R$. The internal choice operator induces several refusal sets derived from $Q$ and $R$. Since these processes accept their initial events with external choice,
-process $Q\intchoice R$ induces just two maximal refusal sets $\{b\}$ and
-$\{a\}$. Note that event $c$ can never be refused, since it is not a member of any
+Its transition graph $G(P)$ is shown in Fig.~\ref{fig:tga}. Process state $P$
+is represented there as Node\_0, with $\{ b,c\}$ as the only maximal refusal,
+since event $a$ can never be refused, and no other events are accepted.
+Having engaged into $a$, the transition emanating from Node\_0 leads to
+Node\_2 representing  the process state $P/a = Q\intchoice R$. The internal
+choice operator induces several refusal sets derived from $Q$ and $R$. Since
+these processes accept their initial events with external choice, process
+$Q\intchoice R$ induces just two maximal refusal sets $\{b\}$ and $\{a\}$.
+Note that event $c$ can never be refused, since it is not a member of any
 maximal refusal.
 
 Having engaged into $c$, the next process state is represented by Node\_1. Due to normalisation, there was only a single transition satisfying
