@@ -172,7 +172,7 @@ $s$. The set of traces of $P$ is denoted by $\trc(P)$. If $s\in\trc(P)$, then
 the process corresponding to $P$ after having executed $s$ is denoted by
 $P/s$. Since $G(P)$ is normalised, there is a unique node reached by applying
 the events from $s$ one by one, starting in $\ii n$. Therefore, $G(P)/s$  is
-also well-defined.
+also well defined.
 
 By $[n]^0$ we denote the \emph{fan-out} of $n$:~the set of events occurring
 as labels in any outgoing transitions.
@@ -328,6 +328,9 @@ with input $x$ and output $y$. We use  both set notation $(q,x,y,q')\in h$
 and Boolean notation $h(q,x,y,q')$ for specifying that $(q,x,y,q')$ is a
 transition in $h$.
 
+The set of all FSMs with input alphabet $\Sigma_I$ and output alphabet
+$\Sigma_O$ is denoted $\fsm(\Sigma_I,\Sigma_O)$.
+
 We call $x$ a \emph{defined} input in state $q$, if there is a transition
 from $q$  with input $x$. If every input of $\Sigma_I$ is defined in every
 state, $M$ is \emph{completely specified}. If in every state $q$ and for
@@ -358,36 +361,39 @@ with $q_0 = \ii{q}$, $h(q_{i-1},x_i,y_i,q_{i})$ for $i = 1,\dots,k$, and
 $\overline{x} = x_1\dots x_k$ and $\overline{y} = y_1\dots y_k$.
 
 The empty trace is denoted by $\varepsilon$, and
-$(q,\varepsilon,\varepsilon,q)\in h$, for any state $q$.
-A \emph{language}  of an FSM $M$  is the set consisting of all possible input/output
-traces in $M$; we use notation
- $L_M(q)=\{\overline{x}/\overline{y}~|~\exists q'\in Q: h(q,\overline{x},\overline{y},q')\}$ for $q\in Q$, and  $L(M)=L_M(\ii{q})$.
-By $\fsm(\Sigma_I,\Sigma_O)$ we denote the set of all FSMs with input alphabet $\Sigma_I$ and
-output alphabet $\Sigma_O$.
-
-An FSM $M$ is called \emph{observable} if in every state $q$, every existing post-state $q'$ is uniquely determined by the I/O pair $x/y$ satisfying $h(q,x,y,q')$. For
-observable state machines, the partial function
+$(q,\varepsilon,\varepsilon,q)\in h$, for any state $q$. The \emph{language}
+$L(M)$ of an FSM $M$ is the set consisting of all possible pairs of input and
+output traces in $M$. $L(M)= LM(\ii{q})$, where for $q\in Q$
+$$
+  L_M(q)=\{\overline{x}/\overline{y}~|~\exists q'\in Q: h(q,\overline{x},\overline{y},q')\}
+$$
+An FSM $M$ is called \emph{observable} if in every state $q$, every existing
+post-state $q'$ is uniquely determined by the I/O pair $x/y$ satisfying
+$h(q,x,y,q')$. For observable state machines, the partial function
 $$
 \_ \after\_ /\_ : Q\times\Sigma_I\times \Sigma_O \pfun Q;\
 q\after(x/y) = q' \Leftrightarrow h(q,x,y,q')
 $$
-is well-defined. Again, it can be extended to I/O-traces $\overline x/\overline y$
-by repetitive application.
-Deterministic FSMs are always observable. Every non-observable FSM can be transformed into an observable one that has the same language~\cite{PeleskaHuangLectureNotesMBT}. The algorithm
-operates in analogy to the algorithm normalising transition graphs of CSP processes.
+is well-defined. Again, it can be extended to I/O-traces $\overline
+x/\overline y$ by repetitive application. Deterministic FSMs are always
+observable. Every non-observable FSM can be transformed into an observable
+one that has the same language~\cite{PeleskaHuangLectureNotesMBT}. The
+algorithm that can be used to make this transformation operates analogously
+to the algorithm for normalising transition graphs of CSP processes.
 
 % -----------------------------------------------------------------------------------
-Two FSM $M_1, M_2$ are \emph{I/O-equivalent ($M_1\sim M_2$)} if and only if their languages coincide, i.e.~$L(M_1) = L(M_2)$. FSM $M_1$ is a \emph{reduction of $M_2$ ($M_1 \preceq M_2$)},
-if and only if $L(M_1) \subseteq L(M_2)$. I/O-equivalence is also called
-\emph{trace equivalence} by some authors, see, e.g.~\cite{luo_test_1994}.
+
+Two FSM $M_1, M_2$ are \emph{I/O-equivalent}, written $M_1\sim M_2$, if, and
+only if, their languages coincide, i.e.~$L(M_1) = L(M_2)$. FSM $M_1$ is a
+\emph{reduction of $M_2$}, written $M_1 \preceq M_2$ if, and only if, $L(M_1)
+\subseteq L(M_2)$. I/O-equivalence is also called \emph{trace equivalence} by
+some authors, see, e.g.,~\cite{luo_test_1994}.
 
 % ------------------------------------------------------------------------------------
 
-
-% -----------------------------------------------------------------------------------
-FSMs can be composed in parallel by synchronising over common input/output events:
-Let FSMs $M_i=(Q_i, \ii{q_i}, \Sigma_I, \Sigma_O,  h_i), i = 1,2$ be defined over
-the same input/output alphabets. Then
+FSMs can be composed in parallel by synchronising over their common input and
+output events. Let FSMs $M_i=(Q_i, \ii{q_i}, \Sigma_I, \Sigma_O,  h_i), i =
+1,2$ be defined over the same input and output alphabets. Then
 $$
 M_1 \cap M_2 = (Q_1\times Q_2, (\ii{q_1},\ii{q_2}),\Sigma_I, \Sigma_O, h)
 $$
@@ -411,3 +417,5 @@ $$
 \xrightarrow{x_2/y_2} \dots \xrightarrow{x_k/y_k} q_2^{k}\
 \text{of}\ M_2
 $$
+In the next section, we show how normalised transition graphs can be encoded
+as an FSM.
