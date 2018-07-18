@@ -1,43 +1,54 @@
+% ==========================================================================
 \section{Finite Complete Test Suites for CSP}
 \label{sec:finitecomplete}
 % ==========================================================================
+
+Here, we present a model map and a test case map pair for CSP processes that
+fulfils the satisfaction condition. In Section~\ref{sec:mmap} we present the
+model map, and in Section~\ref{sec:tcmap}, the test case map.
+
+% ==========================================================================
 \subsection{A Model Map from CSP Processes to Finite State Machines}
 \label{sec:mmap}
+% ==========================================================================
 
-We will now construct a model map for associating CSP processes represented by normalised transition graphs to finite state machines. The intuition behind this 
-construction is that the finite state machine's input alphabet  corresponds to
-{\it sets of inputs} that may be offered to a CSP process. Depending on the events 
-contained in this set, the process may (1) accept all of them, (2) accept some of them while refusing others, and (3) refuse all of them. This is reflected in the FSM
-by outputs   representing events that the process really has engaged in and 
-an extra event $\bot$ representing refusal, if the set of events has been blocked.
-Blocked sets of events are always associated with self-loop transitions: the
-state is not changed, because the corresponding CSP process also remains blocked
-in its current state.
+We now construct a model map for associating CSP processes represented by
+normalised transition graphs to finite state machines. The intuition behind
+this construction is that the finite state machine's input alphabet
+corresponds to {\it sets of inputs} that may be offered to a CSP process.
+Depending on the events contained in this set, the process may (1)~accept all
+of them, (2)~accept some of them while refusing others, or (3)~refuse all of
+them. This is reflected in the FSM by outputs   representing events that the
+process really has engaged in and an extra event $\bot$ representing refusal,
+if the set of events has been blocked. In the FSM, blocked sets of events are
+always associated with self-loop transitions: the state is not changed,
+because the corresponding CSP process also remains blocked in its current
+state if it refuses an event.
 
-More formally, we fix a finite CSP process alphabet $\Sigma$ and consider a 
-finite-state process 
-$P$ over this alphabet with normalised transition graph 
-$G(P)=( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, r : N \fun \mathbb{P}\mathbb{P}(\Sigma))$.
- Then the model map $T$ maps $P$ to the following observable FSM $T(P) = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ specified by
+More formally, we a finite alphabet $\Sigma$ of events and consider a
+finite-state process $P$ (with events in this alphabet) with normalised
+transition graph $G(P)=( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, r : N
+\fun \mathbb{P}\mathbb{P}(\Sigma))$. The model map $T$ maps $P$ to the
+following observable FSM $T(P) = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ specified by
+%
 \begin{eqnarray*}
-Q & = & N
-\\
-\ii q & = & \ii n
-\\
-\Sigma_I & = & \power(\Sigma) - \{ \varnothing \}
-\\
-\Sigma_O & = & \Sigma \cup \{ \bot\}
-\\
-h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge 
-(n,e)\in \dom~t\wedge t(n,e) = n' \} \cup {}
-\\ & & 
-\{ (n,A,\bot,n)~|~A\in r(n) -\{\varnothing\}
-  \}
-\end{eqnarray*} 
-
-We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$ are
-\emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the FSM output trace $s$ may contain deadlock events $\bot$ that are not contained in the  process alphabet $\Sigma$. 
-
+  Q & = & N
+  \\
+  \ii q & = & \ii n
+  \\
+  \Sigma_I & = & \power(\Sigma) - \{ \varnothing \}
+  \\
+  \Sigma_O & = & \Sigma \cup \{ \bot\}
+  \\
+  h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge (n,e)\in \dom~t\wedge t(n,e) = n' \} \cup
+  \{ (n,A,\bot,n)~|~A\in r(n) -\{\varnothing\} \}
+\end{eqnarray*}
+%
+We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$
+are \emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the
+FSM output trace $s$ may contain deadlock events $\bot$ that are not
+contained in the  process alphabet $\Sigma$. So, we have corresponding traces
+if they only differ by the presence or absence of $\bot$. 
 
 % ...................................................................................
  \begin{figure}
@@ -49,20 +60,20 @@ We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$ are
 \caption{FSM resulting from applying the model map to CSP process $P$ from Example~\ref{ex:a}.}
  \label{fig:fsm0}
  \end{figure}
-% ................................................................................... 
+% ...................................................................................
 
 
 \begin{example}{ex:b}
-For the CSP process $P$ and its transition graph $G(P)$ discussed in Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}. 
+For the CSP process $P$ and its transition graph $G(P)$ discussed in Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}.
 For displaying its transitions, we used notation
 $$
 (\text{condition}(A)) / e
 $$
 which stands for a set of transitions between the respective nodes: one transition per non-empty set $A\subseteq \Sigma$ fulfilling the specified condition.
-The arrow 
+The arrow
 $$
 \text{Node\_0} \xrightarrow{(a\in A) / a} \text{Node\_2},
-$$  
+$$
 for example, stands for FSM transitions
 $$
 \begin{array}{l}
@@ -75,26 +86,26 @@ $$
 \end{example}
 
 
-We are now in the position to state and prove the theorem about the model map 
+We are now in the position to state and prove the theorem about the model map
 fulfilling the satisfaction condition {\bf SC1} introduced in Section~\ref{sec:transltt}. To this end, we first introduce five lemmas.
 
 
 \begin{lemma}\label{tran}
-Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the process state $P/s$. 
-Then for any $x\in \Sigma_I$, $y\in \Sigma_O\colon$ 
-\begin{align*}(n,x,y,n')\in h\Leftrightarrow &(y\in x\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee\\ &(y=\bot \wedge (s,x)\in {\text {\rm Fail}}(P)\wedge n'=n)\end{align*} 
+Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the process state $P/s$.
+Then for any $x\in \Sigma_I$, $y\in \Sigma_O\colon$
+\begin{align*}(n,x,y,n')\in h\Leftrightarrow &(y\in x\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee\\ &(y=\bot \wedge (s,x)\in {\text {\rm Fail}}(P)\wedge n'=n)\end{align*}
 \end{lemma}
 
 \begin{proof}
 Let $s'=s.y\project \Sigma$.
 We consider the following two cases:
 \begin{itemize}
-\item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have  
-\begin{align*}(n,x,e,n')\in h\Leftrightarrow & e\in x\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)\\ \Leftrightarrow& e\in x\wedge s.e\in \trc(P)\wedge n'=G(P)/s.e\end{align*} 
-\item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive 
+\item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have
+\begin{align*}(n,x,e,n')\in h\Leftrightarrow & e\in x\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)\\ \Leftrightarrow& e\in x\wedge s.e\in \trc(P)\wedge n'=G(P)/s.e\end{align*}
+\item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive
 \begin{align*}(n,x,\bot,n')\in h\Leftrightarrow & x \in {\text {\rm Ref}}(P/s)\wedge n'=n \\
-\Leftrightarrow & (s,x) \in {\text {\rm Fail}}(P)\wedge n'=n\end{align*} 
-\end{itemize} 
+\Leftrightarrow & (s,x) \in {\text {\rm Fail}}(P)\wedge n'=n\end{align*}
+\end{itemize}
 \end{proof}
 
 %%----------------------------------------------------------------------------
@@ -102,17 +113,17 @@ We consider the following two cases:
 
 \begin{lemma}\label{trac}
 
-Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in L(T(P))\Rightarrow s\in\trc(P) \wedge \underline q\after x/y=G(P)/s.$$    
+Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in L(T(P))\Rightarrow s\in\trc(P) \wedge \underline q\after x/y=G(P)/s.$$
 \end{lemma}
 \begin{proof}
-We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and $x'/y'\in \Sigma\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$. 
+We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and $x'/y'\in \Sigma\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$.
 Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s',x',y',n)\in h$ and $n=\underline q\after x/y$. By Lemma~\ref{tran} we have $s'=s.y'\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$.
 \end{proof}%-----------------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------
 
 \begin{lemma}\label{exte}
-Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then 
+Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then
 \begin{eqnarray*}
 x.x'/y.y'\in L(T(P)) & \Leftrightarrow  &
 \big(y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee {}
@@ -133,15 +144,15 @@ Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Si
 %----------------------------------------------------------------------------
 %----------------------------------------------------------------------------
 \begin{lemma}\label{cont}
-For any $s\in \Sigma^*$, 
+For any $s\in \Sigma^*$,
 $$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
 \end{lemma}
 %
 %--------------------------------------------------------------------------------------------------
 \begin{proof}
-Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$ the length of $s$. Suppose $s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with $\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and $e\in\Sigma$. 
+Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$ the length of $s$. Suppose $s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with $\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and $e\in\Sigma$.
 Then \[\begin{array}{llll}
-&& s.e\in \trc(P)\\ 
+&& s.e\in \trc(P)\\
 &\Leftrightarrow & s\in \trc(P)\wedge s.e\in \trc(P)\\
 &\Leftrightarrow &  \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge s.e\in \trc(P)\\
 &\Rightarrow & \exists x\in \Sigma_I^*: x.\{e\}/s.e\in L(T(P))&[{\text{Lemma~\ref{exte}}}]\\
@@ -149,7 +160,7 @@ Then \[\begin{array}{llll}
 \end{array}
 \]
  \[\begin{array}{llll}
-&& \exists x\in \Sigma_I^*: x/s.e\in L(T(P))\\ 
+&& \exists x\in \Sigma_I^*: x/s.e\in L(T(P))\\
 &\Leftrightarrow & \exists x\in \Sigma_I^*\wedge \exists x'\in \Sigma_I: x/s\in L(T(P))\wedge x.x'/s.e\in L(T(P))\\
 &\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{exte}}}]\\
 \end{array}
@@ -159,13 +170,13 @@ Then \[\begin{array}{llll}
 
 %---------------------------------------------------------------------------
 \begin{lemma}\label{conf}
-For any $s\in \Sigma^*$ and $x'\in \Sigma_I$, 
+For any $s\in \Sigma^*$ and $x'\in \Sigma_I$,
 $$(s,   x')\in {\text {\rm Fail}}(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(P))$$
 \end{lemma}
 \begin{proof}
-$\forall s\in \Sigma^*, x'\in \Sigma_I$: 
+$\forall s\in \Sigma^*, x'\in \Sigma_I$:
 \[\begin{array}{llll}
-&& \exists x\in \Sigma_I^*: x.x'/s.\bot\in L(T(P))&\\ 
+&& \exists x\in \Sigma_I^*: x.x'/s.\bot\in L(T(P))&\\
 &\Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge x.x'/s.\bot\in L(T(P))&\\
 &\Leftrightarrow & (s,   x')\in {\text {\rm Fail}}(P)&[{\text {Lemma~\ref{exte} and ~\ref{cont}}}]
 
@@ -196,9 +207,9 @@ Suppose $T(Q)\preceq  T(P)$. Let $s\in \Sigma^*, x'\in \Sigma_I$. Then by Lemma~
 
 Hence $$T(Q)\preceq  T(P)\Rightarrow P\,\sqsubseteq_F\, Q$$
 
-Now suppose $P\,\sqsubseteq_F\, Q$. We prove by induction on $\#(x/y)$ that for any $x/y\in (\Sigma_I\times \Sigma_O)^*$,  $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds. 
-It is trivial if $\#(x/y)=0$. Suppose $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds for any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k\ge 0$. 
-For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\in \Sigma_I\times \Sigma_O$. Let $s=y\project \Sigma$ and $s'=(y.y')\project \Sigma$. Then by Lemma~\ref{exte} and $ P\,\sqsubseteq_F\, Q$ we have 
+Now suppose $P\,\sqsubseteq_F\, Q$. We prove by induction on $\#(x/y)$ that for any $x/y\in (\Sigma_I\times \Sigma_O)^*$,  $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds.
+It is trivial if $\#(x/y)=0$. Suppose $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds for any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k\ge 0$.
+For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\in \Sigma_I\times \Sigma_O$. Let $s=y\project \Sigma$ and $s'=(y.y')\project \Sigma$. Then by Lemma~\ref{exte} and $ P\,\sqsubseteq_F\, Q$ we have
 \[\begin{array}{lll}
 &&x.x'/y.y'\in L(T(Q))\\&\Rightarrow& x/y\in L(T(Q))\wedge \big((y'\in x'\wedge s'\in \trc(Q))\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(Q))\big)\\
 &\Rightarrow& x/y\in L(T(P))\wedge \big((y'\in x'\wedge s'\in \trc(P)\big)\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(P))\big)\\
@@ -207,7 +218,7 @@ For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\
 \]
 Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
 \end{proof}
- 
+
 
 % ==========================================================================
 \subsection{A Test Case Map from Finite State Machines to CSP Processes}
@@ -216,25 +227,25 @@ Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
 % -------------------------------------------------------------------------
 \subsubsection*{FSM Test Cases}
 
-Following~\cite{DBLP:conf/hase/PetrenkoY14}, 
-an \emph{adaptive FSM test case} 
+Following~\cite{DBLP:conf/hase/PetrenkoY14},
+an \emph{adaptive FSM test case}
 $$
 tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)
-$$ 
+$$
 is a nondeterministic, observable, output-complete, acyclic FSM which only provides a single input in a given state. Running in FSM intersection mode with the SUT, the test case provides a specific input to the SUT; this input is determined by the current state of the test case. It accepts every output and transits either to a fail-state FAIL, if the output is wrong according to the test objectives, or to the next test state uniquely determined  by the processed input/output pair. Another state PASS indicates that
 the test has been completed without failure. Both FAIL and PASS are termination states, that is, they do not have any outgoing transitions.
 
-Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs. A function $in : Q -\{  \text{PASS}, \text{FAIL} \} 
+Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs. A function $in : Q -\{  \text{PASS}, \text{FAIL} \}
 \fun\Sigma_I$ maps the states to these inputs. Termination states
 of the FSM are not labelled with further inputs.
 
 There is no requirement that an FSM test case running in intersection mode against
 an FSM $M$ acting as SUT should {\it always} reach the PASS state. Since the SUT may be nondeterministic, it may perform a joint test execution that blocks before
-the test case's PASS state is reached. In such a case, the result of the test execution is \emph{inconclusive}. Due to nondeterminism, for $M$ to pass a test case, it 
+the test case's PASS state is reached. In such a case, the result of the test execution is \emph{inconclusive}. Due to nondeterminism, for $M$ to pass a test case, it
 has to checked that {\it every possible} test execution of  $tc_\text{FSM}$ against $M$
 terminates either in PASS, or that the result remains inconclusive. If one execution ends in FAIL, the test verdict is FAIL. More formally,
 $$
-M\ \pass\ tc_\text{FSM} \equiv 
+M\ \pass\ tc_\text{FSM} \equiv
 \big(
 \forall x/y \in L(M)\cap L(tc_\text{FSM}): \ii q\after(x/y) \neq FAIL
 \big).
@@ -242,7 +253,7 @@ $$
 
 \begin{example}{ex:xx}
 Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
-for the same input and output alphabets as defined for  the FSM presented in Example~\ref{ex:b}. The test case is passed by the FSM from Example~\ref{ex:b}, because 
+for the same input and output alphabets as defined for  the FSM presented in Example~\ref{ex:b}. The test case is passed by the FSM from Example~\ref{ex:b}, because
 intersecting the two state machines results in an FSM which always reaches the PASS state.
 \end{example}
 
@@ -257,24 +268,24 @@ intersecting the two state machines results in an FSM which always reaches the P
 \caption{An FSM test case which is passed by the FSM presented in Example~\ref{ex:b}.}
  \label{fig:fsm0tc}
  \end{figure}
-% ................................................................................... 
+% ...................................................................................
 
- 
+
 
 
 % -------------------------------------------------------------------------
 \subsubsection*{CSP Test Cases}
 \label{sec:csptc}
-A \emph{CSP test case} $tc_\text{CSP}$  is a terminating process with alphabet 
-$\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for 
-(1) test  verdict FAIL ($\dag$), (2) timeout ($\bot$), and (3) test 
+A \emph{CSP test case} $tc_\text{CSP}$  is a terminating process with alphabet
+$\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
+(1) test  verdict FAIL ($\dag$), (2) timeout ($\bot$), and (3) test
  verdict PASS ($\tick$). The test case runs in parallel with the SUT $P$,
- synchronising over all events from the visible alphabet $\Sigma$ of $P$. This is 
+ synchronising over all events from the visible alphabet $\Sigma$ of $P$. This is
  expressed by the formula
  $$
  P\parallel[\Sigma] tc_\text{CSP}.
  $$
- 
+
  In analogy to FSM test cases, a CSP process $P$ passes a test case $tc_\text{CSP}$
  if the traces of the parallel composition do not contain the failure event, that is,
  $$
@@ -283,9 +294,9 @@ $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
  \big)
  $$
 
- 
+
  In principle, very general classes of CSP processes can be
- used for testing, as introduced, for example, 
+ used for testing, as introduced, for example,
  in~\cite{DBLP:conf/fm/PeleskaS96,peleska1997a}. For the purpose of this paper, however, we can restrict the possible variants of CSP test cases to the ones that are in the range of the test case map which is constructed next.
 
 
@@ -297,8 +308,8 @@ CSP process alphabet $\Sigma$ extended by the events $\{\dag,\bot,\tick \}$ intr
 above
 and the associated FSM input and output alphabets
 $\Sigma_I = \power(\Sigma)-\{\varnothing\}$ and $\Sigma_O=\Sigma\cup \{\bot \}$.
-Given an FSM test case $tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)$, 
-the image $T^*(tc_\text{FSM})$ is the CSP process $tc_\text{CSP}$ specified 
+Given an FSM test case $tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)$,
+the image $T^*(tc_\text{FSM})$ is the CSP process $tc_\text{CSP}$ specified
 as follows.
 \begin{eqnarray*}
 tc_\text{CSP} & = & tc(\ii q)
@@ -308,7 +319,7 @@ tc(q) & = & \big( e :  A(q) \then  tc(q\after (in(q)/e)) \big)
  \big( e : A_\text{PASS}(q)   \then \tick \then \Skip \big)
 \\ & & \extchoice
  \big( e : A_\text{FAIL}(q) \then \dag \then \Skip \big)
-\\ & & 
+\\ & &
 \\
 A(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \}
 \\
@@ -317,22 +328,22 @@ A_\text{PASS}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS
 A_\text{FAIL}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}
 \end{eqnarray*}
 
-Intuitively speaking, $tc_\text{CSP}$ offers in each test step the same events to 
-the CSP process to be tested as the FSM test case offers to the FSM under test. 
+Intuitively speaking, $tc_\text{CSP}$ offers in each test step the same events to
+the CSP process to be tested as the FSM test case offers to the FSM under test.
 These events are specified in each non-terminating test step by $in(q)$, where
-$q$ is the current state of the FSM test case $tc_\text{FSM}$. While the FSM test 
+$q$ is the current state of the FSM test case $tc_\text{FSM}$. While the FSM test
 case offers these events a single set-valued member of the input alphabet $\Sigma_I$
 to the FSM under test, the CSP test offers the same to the SUT by means of an external choice, so that it just depends on the SUT which event to choose. In addition to the
-events from $in(q)$, the CSP test case 
+events from $in(q)$, the CSP test case
 accepts the event $\bot$ which is not shared with
 the SUT but represents a timeout event provided by the testing environment to indicate
 that the SUT is blocked without accepting any of the events in $in(q)$.
 
 The events offered/accepted by the CSP test in state $tc(q)$ are partitioned into
 3 sets $A(q)$, $A_\text{PASS}(q)$, and $A_\text{FAIL}(q)$. The disjointness of these
-sets is a consequence of the fact that the FSM test case is observable: if 
-$tc_\text{FSM}$ can transit, for example, from $q$ to FAIL with I/O $in(q)/a$, 
-then there exists no other transition from $q$ which is also 
+sets is a consequence of the fact that the FSM test case is observable: if
+$tc_\text{FSM}$ can transit, for example, from $q$ to FAIL with I/O $in(q)/a$,
+then there exists no other transition from $q$ which is also
 labelled by $in(q)/a$.
 
 
@@ -347,7 +358,7 @@ T^*(tc_\text{FSM}) & = & P_1
 \\
 P_1 & = & \big(e:\{ b,c,\bot \} \bullet e \then \dag\then\Skip\big)
 \extchoice
- \big( a \then P_2 \big) 
+ \big( a \then P_2 \big)
 \\
 P_2 & = & \big( e : \{ a,b,\bot \}\bullet e\then \dag\then\Skip  \big)
 \extchoice
@@ -374,7 +385,7 @@ regarding the test case map, the model map, and the pass conditions for tests on
 
 % ----------------------------------------------------------------------
 \begin{theorem}
-Fixing a CSP process alphabet $\Sigma$, the model map 
+Fixing a CSP process alphabet $\Sigma$, the model map
 $T : \underline{Sig}_1 \fun FSM$ and the test case map $T^*:TC(FSM) \fun TC(CSP)$ fulfil satisfaction condition {\bf SC2} in the sense that
 $$
 \forall P\in \underline{Sig}_1, tc_\text{FSM}\in TC(FSM): T(P)\ \pass_2\ tc_\text{FSM} \Leftrightarrow
@@ -382,21 +393,21 @@ P\ \pass_1\ T^*(tc_\text{FSM})
 $$
 \end{theorem}
 \begin{proof}
-Let $T(P) = (Q,\ii q,\Sigma_I,\Sigma_O,h)$ and 
+Let $T(P) = (Q,\ii q,\Sigma_I,\Sigma_O,h)$ and
 $tc_\text{FSM} = (Q',\ii q',\Sigma_I,\Sigma_O,h',in)$.
-We show by induction over the length of $s\in\Sigma_O^*$ that the following 
+We show by induction over the length of $s\in\Sigma_O^*$ that the following
 assertions hold for all $s$.
 \begin{enumerate}
-\item For every pass-trace $x/s \in L(T(P)) \cap L(tc_\text{FSM})$, 
+\item For every pass-trace $x/s \in L(T(P)) \cap L(tc_\text{FSM})$,
 there exists a pass-trace $u \in \text{tr}(P\parallel[\Sigma] T^*(tc_\text{FSM}))$, such that
 $u\project\Sigma$ corresponds to $x/s$.
 
-\item For every fail-trace  $x/s \in L(T(P)) \cap L(tc_\text{FSM})$, 
-there exists a fail-trace trace 
+\item For every fail-trace  $x/s \in L(T(P)) \cap L(tc_\text{FSM})$,
+there exists a fail-trace trace
 $u \in \text{tr}(P\parallel[\Sigma] T^*(tc_\text{FSM}))$, such that
 $u\project\Sigma$ corresponds to $x/s$.
 
-\item For all $x/s\in L(T(P))$, 
+\item For all $x/s\in L(T(P))$,
 the graph nodes of $G(P)$ and the states of $T(P)$ are related by
 $$
 \begin{array}{l}
@@ -418,64 +429,64 @@ where $tc(q)$ has been defined above with the test case map.
 
 \end{enumerate}
 
-Proof of 1 and 2 obviously proves the theorem; assertions~3 and 4 are 
+Proof of 1 and 2 obviously proves the theorem; assertions~3 and 4 are
 needed to perform the induction argument.
 
 
 
-For the base case, $s$ is the empty trace $\varepsilon$, so $x/s$ is empty as well. We have 
-$G(P)/\varepsilon = \ii n = \ii q$, due to the definition of the model map; this proves Assertion~3 for the base case. 
+For the base case, $s$ is the empty trace $\varepsilon$, so $x/s$ is empty as well. We have
+$G(P)/\varepsilon = \ii n = \ii q$, due to the definition of the model map; this proves Assertion~3 for the base case.
 FSM test case $tc_\text{FSM}$ resides in its initial state $\ii q'$. By definition of the test case map above, $T^*(tc_\text{FSM})$ has initial CSP process state $tc(\ii q')$; this proves  Assertion~4 for the base case $\#s = 0$. For assertions 1 and 2, there is nothing to
 prove: no test can pass or fail on the empty trace.
 
 For the induction hypothesis, assume that the four assertions have been proven for
 $\#s \le k$ with $0\le k$.
 
-For the induction step, assume that the FSM $T(P)$ 
+For the induction step, assume that the FSM $T(P)$
 has run through trace $x/s\in L(T(P))\cap L(tc_\text{FSM})$ such that
 $\#s \le k$ and $\ii q\after(x/s) = q\in N$. Moreover, the FSM test case
-$tc_\text{FSM}$ fulfils  $\ii q'\after (x/s) = q'$ for a uniquely defined state 
+$tc_\text{FSM}$ fulfils  $\ii q'\after (x/s) = q'$ for a uniquely defined state
 $q'\in Q'$. The induction hypothesis gives us
 $G(P)/(s\project\Sigma) = \ii q\after (x/s) = q$
 from Assertion~3 and
 $T^*(tc_\text{FSM})/(s\project \Sigma) = tc(q')$ from Assertion~4.
 FSM test $tc_\text{FSM}$ will offer input $in(q')$ to the FSM $T(P)$ which is being tested. We distinguish two cases  for the outcomes of the resulting test step.
 
- 
+
 \medskip
 \noindent
 {\bf Case~1.} $(x.in(q'))/(s.\bot) \in L(\ii q\after (x/s))$.\newline
-By construction of $T(P)$, this is exactly the case if 
+By construction of $T(P)$, this is exactly the case if
 $in(q')\in r(G(P)/(s\project \Sigma)) - \{ \varnothing\}$. By construction of $T(P)$,
-this FSM will perform a self-loop transition labelled by $in(q')/\bot$ and therefore remain in $q$. For $P$, the corresponding behaviour is to refuse all events from 
+this FSM will perform a self-loop transition labelled by $in(q')/\bot$ and therefore remain in $q$. For $P$, the corresponding behaviour is to refuse all events from
 $in(q')$, so $q$ also remains as the current state in $G(P)/(s\project \Sigma)$. This proves Assertion~3 for the induction step, Case~1.
 
 Since $tc_\text{FSM}$ is output complete,
-$in(q')/\bot \in L(q')$. Depending on the nature of the test case, 
+$in(q')/\bot \in L(q')$. Depending on the nature of the test case,
 $q'\after (in(q')/\bot)$ is one of the deadlock states PASS, FAIL, or it is a
-non-blocking FSM state, say, $q''$. Since $tc_\text{FSM}$ is observable, however, 
-this post-state is uniquely determined. 
-Since the sets $A(q)$, $A_\text{PASS}(q)$, and $A_\text{FAIL}(q)$ 
+non-blocking FSM state, say, $q''$. Since $tc_\text{FSM}$ is observable, however,
+this post-state is uniquely determined.
+Since the sets $A(q)$, $A_\text{PASS}(q)$, and $A_\text{FAIL}(q)$
 are disjoint,   $T^*(tc_\text{FSM})$
-has exactly one choice to proceed and will come to the post-states that are analogous to those of $tc_\text{FSM}$: if $tc_\text{FSM}$ terminates in PASS(FAIL), then 
-$T^*(tc_\text{FSM})$ will produced the events $\bot$ followed by 
+has exactly one choice to proceed and will come to the post-states that are analogous to those of $tc_\text{FSM}$: if $tc_\text{FSM}$ terminates in PASS(FAIL), then
+$T^*(tc_\text{FSM})$ will produced the events $\bot$ followed by
 $\tick(\dag)$ and terminate. If $tc_\text{FSM}$  transits with $in(q)/e$ to $q''$, CSP test case
-$T^*(tc_\text{FSM})$ will perform $e\in A(q)$ as well and continue like process 
-$tc(q'\after(in(q')/\bot)$ with $q'\after(in(q')/\bot) = q''$. 
-Since $\bot,\tick,\dag$ are not contained in $\Sigma$, the CSP process $P$ 
-cannot block these transitions of  $T^*(tc_\text{FSM})$, since we have assumed $P$ to be non-divergent. This shows that $tc_\text{FSM}$ and $T^*(tc_\text{FSM})$ engage into the same pass/fail/continue step, as was to be shown. This proves assertions~1,2,4 
+$T^*(tc_\text{FSM})$ will perform $e\in A(q)$ as well and continue like process
+$tc(q'\after(in(q')/\bot)$ with $q'\after(in(q')/\bot) = q''$.
+Since $\bot,\tick,\dag$ are not contained in $\Sigma$, the CSP process $P$
+cannot block these transitions of  $T^*(tc_\text{FSM})$, since we have assumed $P$ to be non-divergent. This shows that $tc_\text{FSM}$ and $T^*(tc_\text{FSM})$ engage into the same pass/fail/continue step, as was to be shown. This proves assertions~1,2,4
 for Case~1.
 
 
 
- 
+
 \medskip
 \noindent
 {\bf Case~2.} $(x.in(q'))/(s.e) \in L(\ii q\after (x/s))$ with $e\in in(q')\subseteq\Sigma$.\newline
 By construction of $T(P)$, this case applies whenever $e\in A\wedge (n,e)\in\dom~t$.
 Also by construction, FSM $T(P)$ will transit to $t(q,e)$ (recall that
 $q = G(P)/(s\project \Sigma)$, so
-$q\after(in(q')/e) = u$ for a uniquely defined state $u= t(q,e) \in N$. Since 
+$q\after(in(q')/e) = u$ for a uniquely defined state $u= t(q,e) \in N$. Since
 $G(P)/(s\project \Sigma)$ will also transit to $u$ by definition of $t$, this proves the induction step for Assertion~3.
 
 With the same argument as in Case~1, we conclude that $tc_\text{FSM}$ and
@@ -485,25 +496,3 @@ This proves the induction step for assertions 1,2,4 in Case~2 and completes the 
 \end{proof}
 
 % ==========================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
