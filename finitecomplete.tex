@@ -15,10 +15,10 @@ model map, and in Section~\ref{sec:tcmap}, the test case map.
 We now construct a model map for associating CSP processes represented by
 normalised transition graphs to finite state machines. The intuition behind
 this construction is that the finite state machine's input alphabet
-corresponds to {\it sets of inputs} that may be offered to a CSP process.
-Depending on the events contained in this set, the process may (1)~accept all
-of them, (2)~accept some of them while refusing others, or (3)~refuse all of
-them. This is reflected in the FSM by outputs   representing events that the
+corresponds to sets of events that may be offered to a CSP process. Depending
+on the events contained in this set, the process may (1)~accept all of them,
+(2)~accept some of them while refusing others, or (3)~refuse all of them.
+This is reflected in the FSM by outputs   representing events that the
 process really has engaged in and an extra event $\bot$ representing refusal,
 if the set of events has been blocked. In the FSM, blocked sets of events are
 always associated with self-loop transitions: the state is not changed,
@@ -41,7 +41,7 @@ following observable FSM $T(P) = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ specified by
   \Sigma_O & = & \Sigma \cup \{ \bot\}
   \\
   h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge (n,e)\in \dom~t\wedge t(n,e) = n' \} \cup
-  \{ (n,A,\bot,n)~|~A\in r(n) -\{\varnothing\} \}
+  \{ (n,R,\bot,n)~|~A\in r(n) -\{\varnothing\} \}
 \end{eqnarray*}
 %
 The graph and the machine have the same nodes and initial nodes. The inputs
@@ -49,7 +49,7 @@ of the machine are the non-empty sets of events, and the outputs include all
 events and $\bot$. In the machine, between every two states $n$ and $n'$, we
 have transitions for all inputs $A$ and outputs $e$ in $A$ that are accepted
 in $n$ and lead to $n'$ according to the graph. In addition, for $\bot$, we
-have a self-transition for every non-empty refusal of $n$.
+have a self-transition for every non-empty refusal $R$ of $n$.
 
 We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$
 are \emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the
@@ -101,29 +101,36 @@ Section~\ref{sec:transltt}. To this end, we first introduce five lemmas.
 In the first lemma, we consider every trace $s$ of a process $P$ and the
 state $n$ that it leads to in the normalised graph $G(P)$ of $P$. We show
 that, for every transition from $n$ in the FSM, there are two possibilities.
-The first is that the output $y$ is in the input $x$, so it is not $\bot$,
+The first is that the output $y$ is in the input $A$, so it is not $\bot$,
 and, in this case, the trace $s.y$ is a trace of $P$, and the target state
 $n'$ is that identified in $G(P)$. We use $s.y$ to denote the trace obtained
 by adding the event $y$ to the end of $s$. The second possibility is that the
 output is $\bot$, and in this case, we have a self-transition, that is, the
-target state is $n$ itself, and $(s,x)$ is a failure of $P$.
+target state is $n$ itself, and $(s,A)$ is a failure of $P$.
 %
 \begin{lemma}\label{tran}
-Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the process state $P/s$.
-Then for any $x\in \Sigma_I$, $y\in \Sigma_O\colon$
+Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the
+process state $P/s$. Then for any $A \in \Sigma_I$, $y\in \Sigma_O\colon$
 \begin{align*}
-  (n,x,y,n')\in h\Leftrightarrow & (y\in x\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee(y=\bot \wedge (s,x)\in {\text {\rm Fail}}(P)\wedge n'=n)\end{align*}
+  (n,A,y,n')\in h\Leftrightarrow & (y\in A\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee(y=\bot \wedge (s,A)\in \failure(P)\wedge n'=n)\end{align*}
 \end{lemma}
 \begin{proof}
-Let $s'=s.y\project \Sigma$.
-We consider the following two cases:
-\begin{itemize}
-\item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have
-\begin{align*}(n,x,e,n')\in h\Leftrightarrow & e\in x\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)\\ \Leftrightarrow& e\in x\wedge s.e\in \trc(P)\wedge n'=G(P)/s.e\end{align*}
-\item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive
-\begin{align*}(n,x,\bot,n')\in h\Leftrightarrow & x \in {\text {\rm Ref}}(P/s)\wedge n'=n \\
-\Leftrightarrow & (s,x) \in {\text {\rm Fail}}(P)\wedge n'=n\end{align*}
-\end{itemize}
+  Let $s'=s.y\project \Sigma$.
+  We consider the following two cases:
+  \begin{itemize}
+    \item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have
+    \begin{align*}
+      (n,A,e,n')\in h\Leftrightarrow & e\in A\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)
+      \\
+      \Leftrightarrow& e\in A \wedge s.e\in \trc(P)\wedge n'=G(P)/s.e
+    \end{align*}
+    \item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive
+    \begin{align*}
+      (n,A,\bot,n')\in h\Leftrightarrow & A \in {\text {\rm Ref}}(P/s)\wedge n'=n
+      \\
+      \Leftrightarrow & (s,A) \in \failure(P)\wedge n'=n
+    \end{align*}
+  \end{itemize}
 \end{proof}
 
 %%----------------------------------------------------------------------------
