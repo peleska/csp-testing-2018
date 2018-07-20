@@ -109,7 +109,7 @@ output is $\bot$, and in this case, we have a self-transition, that is, the
 target state is $n$ itself, and $(s,A)$ is a failure of $P$.
 %
 \begin{lemma}\label{tran}
-Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding the
+Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding to
 process state $P/s$. Then for any $A \in \Sigma_I$, $y\in \Sigma_O\colon$
 \begin{align*}
   (n,A,y,n')\in h\Leftrightarrow & (y\in A\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee(y=\bot \wedge (s,A)\in \failure(P)\wedge n'=n)\end{align*}
@@ -141,9 +141,11 @@ process state $P/s$. Then for any $A \in \Sigma_I$, $y\in \Sigma_O\colon$
 Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in L(T(P))\Rightarrow s\in\trc(P) \wedge \underline q\after x/y=G(P)/s.$$
 \end{lemma}
 \begin{proof}
-We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and $x'/y'\in \Sigma\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$.
-Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s',x',y',n)\in h$ and $n=\underline q\after x/y$. By Lemma~\ref{tran} we have $s'=s.y'\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$.
-\end{proof}%-----------------------------------------------------------------------------
+We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and 
+$x'/y'\in \Sigma_I\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$.
+Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s,x',y',n)\in h$ and $n=\underline q\after x.x'/y.y'$. By Lemma~\ref{tran}, we have 
+$s'\project\Sigma=(s.y')\project\Sigma\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$ for both cases $y'\in\Sigma$ and $y'=\bot$.
+\end{proof}%------------------------------------------------------------------
 
 %-----------------------------------------------------------------------------
 
@@ -161,7 +163,7 @@ Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Si
 \[\begin{array}{lll}
 &&x.x'/y.y'\in L(T(P)) \\&\Leftrightarrow & \exists n'\in Q: (G(P)/s,x',y',n')\in h\\
 &\Leftrightarrow & (y'\in x'\wedge s.y'\in \trc(P))\vee (y'=\bot\wedge (s, x')\in {\text {\rm Fail}}(P)\big)\\
-&\Leftrightarrow & (y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee \big(y'=\bot\wedge (y\project \Sigma, x)\in {\text {\rm Fail}}(P)\big)\end{array}
+&\Leftrightarrow & (y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee \big(y'=\bot\wedge (y\project \Sigma, x')\in {\text {\rm Fail}}(P)\big)\end{array}
 \]
 \end{proof}
 
@@ -187,7 +189,7 @@ Then \[\begin{array}{llll}
  \[\begin{array}{llll}
 && \exists x\in \Sigma_I^*: x/s.e\in L(T(P))\\
 &\Leftrightarrow & \exists x\in \Sigma_I^*\wedge \exists x'\in \Sigma_I: x/s\in L(T(P))\wedge x.x'/s.e\in L(T(P))\\
-&\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{exte}}}]\\
+&\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{trac}}}]\\
 \end{array}
 \]
 \end{proof}
