@@ -25,8 +25,8 @@ always associated with self-loop transitions: the state is not changed,
 because the corresponding CSP process also remains blocked in its current
 state if it refuses an event.
 
-More formally, we a finite alphabet $\Sigma$ of events and consider a
-finite-state process $P$ (with events in this alphabet) with normalised
+More formally, we consider a finite alphabet $\Sigma$ of events and
+a finite-state process $P$ (with events in this alphabet) with normalised
 transition graph $G(P)=( N, \ii n, \Sigma, t : N\times\Sigma \pfun N, r : N
 \fun \mathbb{P}\mathbb{P}(\Sigma))$. The model map $T$ maps $P$ to the
 following observable FSM $T(P) = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ specified by
@@ -51,11 +51,11 @@ have transitions for all inputs $A$ and outputs $e$ in $A$ that are accepted
 in $n$ and lead to $n'$ according to the graph. In addition, for $\bot$, we
 have a self-transition for every non-empty refusal $R$ of $n$.
 
-We say that FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\text{tr}(P)$
-are \emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the
-FSM output trace $s$ may contain deadlock events $\bot$ that are not
-contained in the  process alphabet $\Sigma$. So, we have corresponding traces
-if they only differ by the presence or absence of $\bot$.
+We say that an FSM trace $(x/s) \in L(T(P))$ and CSP trace $s'\in\trc(P)$ are
+\emph{corresponding traces}, if $s' = s\project \Sigma$. Observe that the FSM
+output trace $s$ may contain deadlock events $\bot$ that are not contained in
+the  process alphabet $\Sigma$. So, we have corresponding traces if they only
+differ by the presence or absence of $\bot$.
 
 % ...................................................................................
  \begin{figure}
@@ -101,30 +101,30 @@ Section~\ref{sec:transltt}. To this end, we first introduce five lemmas.
 In the first lemma, we consider every trace $s$ of a process $P$ and the
 state $n$ that it leads to in the normalised graph $G(P)$ of $P$. We show
 that, for every transition from $n$ in the FSM, there are two possibilities.
-The first is that the output $y$ is in the input $A$, so it is not $\bot$,
-and, in this case, the trace $s.y$ is a trace of $P$, and the target state
-$n'$ is that identified in $G(P)$. We use $s.y$ to denote the trace obtained
-by adding the event $y$ to the end of $s$. The second possibility is that the
+The first is that the output $e$ is in the input $A$, so it is not $\bot$,
+and, in this case, the trace $s.e$ is a trace of $P$, and the target state
+$n'$ is that identified in $G(P)$. We use $s.e$ to denote the trace obtained
+by adding the event $e$ to the end of $s$. The second possibility is that the
 output is $\bot$, and in this case, we have a self-transition, that is, the
 target state is $n$ itself, and $(s,A)$ is a failure of $P$.
 %
 \begin{lemma}\label{tran}
 Let $s\in \trc(P)$ and $n=G(P)/s$ be the node of $G(P)$ corresponding to
-process state $P/s$. Then for any $A \in \Sigma_I$, $y\in \Sigma_O\colon$
+process state $P/s$. Then for any $A \in \Sigma_I$, $e\in \Sigma_O\colon$
 \begin{align*}
-  (n,A,y,n')\in h\Leftrightarrow & (y\in A\wedge s.y\in \trc(P)\wedge n'=G(P)/s.y)\vee(y=\bot \wedge (s,A)\in \failure(P)\wedge n'=n)\end{align*}
+  (n,A,e,n')\in h\Leftrightarrow & (e\in A\wedge s.e\in \trc(P)\wedge n'=G(P)/s.e)\vee(e=\bot \wedge (s,A)\in \failure(P)\wedge n'=n)\end{align*}
 \end{lemma}
 \begin{proof}
-  Let $s'=s.y\project \Sigma$.
+  Let $s'=s.e\project \Sigma$.
   We consider the following two cases:
   \begin{itemize}
-    \item[1.] Suppose $y=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have
+    \item[1.] Suppose $e=e$ for some $e\in \Sigma$. Then $s'=s.e$. By definition of $h$, we have
     \begin{align*}
       (n,A,e,n')\in h\Leftrightarrow & e\in A\wedge (n,e)\in {\text{\rm dom}}\, t\wedge n'=t(n,e)
       \\
       \Leftrightarrow& e\in A \wedge s.e\in \trc(P)\wedge n'=G(P)/s.e
     \end{align*}
-    \item[2.] Suppose $y=\bot$. Then $s'=s$, and we can derive
+    \item[2.] Suppose $e=\bot$. Then $s'=s$, and we can derive
     \begin{align*}
       (n,A,\bot,n')\in h\Leftrightarrow & A \in {\text {\rm Ref}}(P/s)\wedge n'=n
       \\
@@ -132,23 +132,53 @@ process state $P/s$. Then for any $A \in \Sigma_I$, $y\in \Sigma_O\colon$
     \end{align*}
   \end{itemize}
 \end{proof}
-
-%%----------------------------------------------------------------------------
+%
 %-----------------------------------------------------------------------------
-
+%
+Next, we use Lemma~\ref{tran} to relate traces and after states
+of the process and the machine of arbitrary length.
+%
 \begin{lemma}\label{trac}
-
-Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ and $s=y\project \Sigma$. Then $$x/y\in L(T(P))\Rightarrow s\in\trc(P) \wedge \underline q\after x/y=G(P)/s.$$
+  Let $x/s \in (\Sigma_I\times\Sigma_O)^*$ and $s' = s\project \Sigma$.
+  Then
+  $$
+    x/s \in L(T(P))\Rightarrow s' \in \trc(P) \wedge \underline q \after x/s = G(P)/s'.$$
 \end{lemma}
 \begin{proof}
-We prove the lemma by induction on $\#(x/y)$,  the length of $x/y$. For the base case, suppose that $x/y=\varepsilon $, then $s=\varepsilon $ and $\underline q\after x/y=\underline n=G(P)/{\varepsilon }$. For the induction hypothesis, suppose the statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/y)=k$ and 
-$x'/y'\in \Sigma_I\times \Sigma_O$. To perform the induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after x/y=G(P)/s$.
-Since $x.x'/y.y'\in L(T(P))$, there is a transition $(G(P)/s,x',y',n)\in h$ and $n=\underline q\after x.x'/y.y'$. By Lemma~\ref{tran}, we have 
-$s'\project\Sigma=(s.y')\project\Sigma\in \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$ for both cases $y'\in\Sigma$ and $y'=\bot$.
-\end{proof}%------------------------------------------------------------------
+  We prove the lemma by induction on $\#(x/y)$, the length of $x/y$.
 
-%-----------------------------------------------------------------------------
+  For the base case, suppose that $x/s = \varepsilon$, then $s = s' = \varepsilon$,
+  which is a trace of every process, and $\underline q\after x/s = \underline
+  n = G(P)/{\varepsilon }$. We recall that $\underline n$ is the initial node.
 
+%  For the induction hypothesis, suppose the
+%  statement holds for all $x/y\in (\Sigma_I\times\Sigma_O)^*$ with
+%  $\#(x/y)=k$, for some $k\ge 0$. Let $x/y\in (\Sigma_I\times\Sigma_O)^*$
+%  with $\#(x/y)=k$ and $x'/y'\in \Sigma_I\times \Sigma_O$. To perform the
+%  induction step, let $y\project \Sigma=s$ and $y.y'\project \Sigma=s'$. Then
+%  by the induction hypothesis we have $s\in\trc(P)$ and $\underline q\after
+%  x/y=G(P)/s$. Since $x.x'/y.y'\in L(T(P))$, there is a transition
+%  $(G(P)/s,x',y',n)\in h$ and $n=\underline q\after x.x'/y.y'$. By
+%  Lemma~\ref{tran}, we have $s'\project\Sigma=(s.y')\project\Sigma\in
+%  \trc(P)\wedge \underline q\after x.x'/y.y'=G(P)/s'$ for both cases
+%  $y'\in\Sigma$ and $y'=\bot$.
+
+  For the induction hypothesis, suppose the statement holds for all $x/s \in
+  (\Sigma_I\times\Sigma_O)^*$ with $\#(x/s)=k$, for some $k\ge 0$. Let
+  $x/s\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/s)=k$ and $A/e\in
+  \Sigma_I\times \Sigma_O$. To perform the induction step, let $s\project
+  \Sigma=s'$ and $(s.e) \project \Sigma=s''$. By the induction hypothesis, we
+  have $s'\in\trc(P)$ and $\underline q\after x/s=G(P)/s'$. Since $x.A/s.e\in
+  L(T(P))$, there is a transition $(G(P)/s',A,e,n)\in h$ with $n=\underline
+  q\after x.A/s.e$. By Lemma~\ref{tran}, we have
+  $s''\project\Sigma=((s'.e)\project\Sigma) \project\Sigma =
+  (s'.e)\project\Sigma\in \trc(P)\wedge \underline q\after x.A/s.e=G(P)/s''$
+  for both cases $e\in\Sigma$ and $e=\bot$.
+
+\end{proof}
+%
+%------------------------------------------------------------------
+%
 \begin{lemma}\label{exte}
 Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then
 \begin{eqnarray*}

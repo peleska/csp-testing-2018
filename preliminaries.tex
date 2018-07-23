@@ -373,12 +373,12 @@ $$
   L_M(q)=\{\overline{x}/\overline{y}~|~\exists q'\in Q: h(q,\overline{x},\overline{y},q')\}
 $$
 %
-For an input trace $\overline{x} = a_1\upto a_n$ and an output trace
-$\overline{y} = b_1\upto b_m$, if they are of the same length, that is, $m =
- n$, then $x/y$ denotes a trace of input-output pairs, that is,
-$x/y =(a_1,b_1)\upto(a_n,b_n)$. Formally, for $x/y \in (\Sigma_I\times
-\Sigma_O)^*$, $x/y$ is an input-output trace $(a_1,b_1)\upto(a_n,b_n)$, with
-$x=a_1\upto a_n \in \Sigma_I^*$ and $y=b_1\upto b_n \in \Sigma_O^*$.
+For an input trace $\overline{x} = a_1,...,a_n$ and an output trace
+$\overline{y} = b_1,...,b_n$, of the same length, $x/y$ denotes a trace of
+input-output (I/O) pairs, that is, $x/y =(a_1,b_1),...,(a_n,b_n)$. Formally,
+for $x/y \in (\Sigma_I\times \Sigma_O)^*$, $x/y$ is an I/O trace
+$(a_1,b_1),...,(a_n,b_n)$, with $x=a_1,...,a_n \in \Sigma_I^*$ and
+$y=b_1,...,b_n \in \Sigma_O^*$.
 
 An FSM $M$ is called \emph{observable} if in every state $q$, every existing
 post-state $q'$ is uniquely determined by the I/O pair $x/y$ satisfying
@@ -397,7 +397,7 @@ to the algorithm for normalising transition graphs of CSP processes.
 % -----------------------------------------------------------------------------------
 
 Two FSM $M_1, M_2$ are \emph{I/O-equivalent}, written $M_1\sim M_2$, if, and
-only if, their languages coincide, i.e.~$L(M_1) = L(M_2)$. FSM $M_1$ is a
+only if, their languages coincide, i.e., $L(M_1) = L(M_2)$. FSM $M_1$ is a
 \emph{reduction of $M_2$}, written $M_1 \preceq M_2$ if, and only if, $L(M_1)
 \subseteq L(M_2)$. I/O-equivalence is also called \emph{trace equivalence} by
 some authors, see, e.g.,~\cite{luo_test_1994}.
