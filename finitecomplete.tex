@@ -41,7 +41,7 @@ following observable FSM $T(P) = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ specified by
   \Sigma_O & = & \Sigma \cup \{ \bot\}
   \\
   h & = & \{ (n,A,e,n')~|~A\in \Sigma_I \wedge e\in A \wedge (n,e)\in \dom~t\wedge t(n,e) = n' \} \cup
-  \{ (n,R,\bot,n)~|~A\in r(n) -\{\varnothing\} \}
+  \{ (n,R,\bot,n)~|~R\in r(n) -\{\varnothing\} \}
 \end{eqnarray*}
 %
 The graph and the machine have the same nodes and initial nodes. The inputs
