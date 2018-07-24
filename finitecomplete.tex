@@ -354,14 +354,13 @@ $$
 tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)
 $$
 is a nondeterministic, observable, output-complete, acyclic FSM that provides
-only a single input in any given state. A test execution is represented by
-the parallel composition of the test FSM with the SUT. So, the test case provides
-a specific input to the SUT determined by the current state of
-the test case. It accepts every output and transits either to a fail-state
-FAIL, if the output is wrong according to the test objectives, or to the next
-test state uniquely determined  by the processed input/output pair. Another
-state PASS indicates that the test has been completed without failure. Both
-FAIL and PASS are deadlock states.
+only a single input in any given state. Running in intersection mode with the
+SUT, the test case provides a specific input to the SUT determined by the
+current state of the test case. It accepts every output and transits either
+to a fail-state FAIL, if the output is wrong according to the test
+objectives, or to the next test state uniquely determined  by the processed
+input/output pair. Another state PASS indicates that the test has been
+completed without failure. Both FAIL and PASS are deadlock states.
 
 Since the test case state determines the input for all of its outgoing transitions, this input is typically used as a state label, and the outgoing transitions are just labelled by the possible outputs. A function $in : Q -\{  \text{PASS}, \text{FAIL} \}
 \fun\Sigma_I$ maps the states to these inputs. Termination states
