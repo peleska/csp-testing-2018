@@ -178,7 +178,7 @@ of the process and the machine of arbitrary length.
   \begin{argue}
     s'' = (s.e) \project \Sigma = (s \project \Sigma).e = s'.e
   \end{argue}
-  and $s'.e \in \trc(P)$ follows from Lemma~\ref{tran}. For $q\after
+  and $s'.e \in \trc(P)$ follows from Lemma~\ref{tran}. For $\underline q\after
   x.A/s.e$, we note that it is $n$, which, by Lemma~\ref{tran} is $G(P)/s'.e
   = G(P)/s''$ as shown above. In the second case, $e = \bot$. So, we note
   %
@@ -186,27 +186,27 @@ of the process and the machine of arbitrary length.
     s'' = (s.\bot) \project \Sigma = s \project \Sigma = s'
   \end{argue}
   Lemma~\ref{tran} gives that $(s',A) \in \failure(P)$ and so $s' \in
-  \trc(P)$. Finally, for $q\after x.A/s.e$, we note that it is $n$, which, by
-  Lemma~\ref{tran} is $G(P)/s = G(P)/s''$ as shown above. 
+  \trc(P)$. Finally, for $\underline q\after x.A/s.e$, we note that it is $n$, which, by
+  Lemma~\ref{tran} is $G(P)/s' = G(P)/s''$ as shown above.
 \end{proof}
 %
 %------------------------------------------------------------------
 %
 \begin{lemma}\label{exte}
-Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then
+Let $x/s\in L(T(P))$. Let $A/e\in \Sigma_I\times \Sigma_O$. Then
 \begin{eqnarray*}
-x.x'/y.y'\in L(T(P)) & \Leftrightarrow  &
-\big(y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee {}
-\\ & & \big(y'=\bot\wedge (y\project \Sigma, x')\in {\text {\rm Fail}}(P)\big).
+x.A/s.e\in L(T(P)) & \Leftrightarrow  &
+\big(e\in A\wedge (s.e)\project \Sigma\in \trc(P)\big)\vee \big(e=\bot\wedge (s\project \Sigma, A)\in \failure(P)\big).
 \end{eqnarray*}
 \end{lemma}
-
 \begin{proof}
-Let $x/y\in (\Sigma_I\times \Sigma_O)^*$ and $x/y\in L(T(P))$. Let $x'/y'\in \Sigma_I\times \Sigma_O$. Then by Lemma~\ref{trac}, we have $s=y\project \Sigma\in \trc(P)$ and $G(P)/s=\underline q\after x/y$. From Lemma~\ref{tran} we have the following:
+Let $x/s\in L(T(P))$, and $A/e\in \Sigma_I\times \Sigma_O$. Then by
+Lemma~\ref{trac}, we have $s'=s\project \Sigma\in \trc(P)$ and
+$G(P)/s'=\underline q\after x/s$. From Lemma~\ref{tran} we have the following:
 \[\begin{array}{lll}
-&&x.x'/y.y'\in L(T(P)) \\&\Leftrightarrow & \exists n'\in Q: (G(P)/s,x',y',n')\in h\\
-&\Leftrightarrow & (y'\in x'\wedge s.y'\in \trc(P))\vee (y'=\bot\wedge (s, x')\in {\text {\rm Fail}}(P)\big)\\
-&\Leftrightarrow & (y'\in x'\wedge (y.y')\project \Sigma\in \trc(P)\big)\vee \big(y'=\bot\wedge (y\project \Sigma, x')\in {\text {\rm Fail}}(P)\big)\end{array}
+&&x.A/s.e\in L(T(P)) \\&\Leftrightarrow & \exists n'\in Q: (G(P)/s,A,e,n')\in h\\
+&\Leftrightarrow & (e\in A\wedge s.e\in \trc(P))\vee (e=\bot\wedge (s, A)\in \failure(P)\big)\\
+&\Leftrightarrow & (e\in A\wedge (s.e)\project \Sigma\in \trc(P)\big)\vee \big(e=\bot\wedge (s\project \Sigma, A)\in \failure(P)\big)\end{array}
 \]
 \end{proof}
 
