@@ -284,34 +284,54 @@ Let $P,Q$ be two CSP processes over the same alphabet $\Sigma$. Then
 $T(Q)\preceq T(P) \Leftrightarrow P\,\sqsubseteq_F\, Q$.
 \end{theorem}
 \begin{proof}
-Suppose $T(Q)\preceq  T(P)$. Let $s\in \Sigma^*, x'\in \Sigma_I$. Then by Lemma~\ref{cont} and Lemma~\ref{conf}
-
-\[\begin{array}{lll}
- s\in \trc(Q) &\Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(Q))\\
-&\Rightarrow& \exists x\in \Sigma_I^*:  x/s\in  L(T(P))\\
-&\Leftrightarrow &s\in \trc(P)\\
-\end{array}
+First, suppose $T(Q)\preceq  T(P)$. Let $s\in \Sigma^*, A\in \Sigma_I$.
+\[
+  \begin{array}{llll}
+    s\in \trc(Q) & \Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(Q)) & [{\text {Lemma~\ref{cont}}}]
+    \\
+    & \Rightarrow & \exists x\in \Sigma_I^*: x/s\in  L(T(P)) & [T(Q)\preceq T(P)]
+    \\
+    &\Leftrightarrow & s \in \trc(P) & [{\text {Lemma~\ref{cont}}}]
+  \end{array}
 \]
-
-\[\begin{array}{lll}
-(s,   x')\in {\text {\rm Fail}}(Q) &\Leftrightarrow & \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(Q))\\
-&\Rightarrow& \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(P))\\
-&\Leftrightarrow &(s,   x')\in {\text {\rm Fail}}(P)\\
-\end{array}
+%
+\[
+  \begin{array}{llll}
+    (s,A)\in \failure(Q) & \Leftrightarrow & \exists x\in \Sigma_I^*: x.A/s.\bot \in L(T(Q)) & [{\text {Lemma~\ref{conf}}}]
+    \\
+    & \Rightarrow & \exists x\in \Sigma_I^*: x.A/s.\bot \in L(T(P)) & [T(Q)\preceq T(P)]
+    \\
+    & \Leftrightarrow & (s,A)\in \failure(P) & [{\text {Lemma~\ref{cont}}}]
+  \end{array}
 \]
+%
+Hence $T(Q)\preceq  T(P)\Rightarrow P\,\sqsubseteq_F\, Q$.
 
-Hence $$T(Q)\preceq  T(P)\Rightarrow P\,\sqsubseteq_F\, Q$$
-
-Now suppose $P\,\sqsubseteq_F\, Q$. We prove by induction on $\#(x/y)$ that for any $x/y\in (\Sigma_I\times \Sigma_O)^*$,  $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds.
-It is trivial if $\#(x/y)=0$. Suppose $x/y\in L(T(Q))\Rightarrow x/y\in L(T(P))$ holds for any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k\ge 0$.
-For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\in \Sigma_I\times \Sigma_O$. Let $s=y\project \Sigma$ and $s'=(y.y')\project \Sigma$. Then by Lemma~\ref{exte} and $ P\,\sqsubseteq_F\, Q$ we have
-\[\begin{array}{lll}
-&&x.x'/y.y'\in L(T(Q))\\&\Rightarrow& x/y\in L(T(Q))\wedge \big((y'\in x'\wedge s'\in \trc(Q))\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(Q))\big)\\
-&\Rightarrow& x/y\in L(T(P))\wedge \big((y'\in x'\wedge s'\in \trc(P)\big)\vee (y'=\bot\wedge (s, x)\in {\text {\rm Fail}}(P))\big)\\
- &\Rightarrow& x.x'/y.y'\in L(T(P)) \\
-\end{array}
-\]
-Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
+For the implication in the other direction, now suppose $P\,\sqsubseteq_F\,
+Q$. We prove by induction on $\#(x/s)$ that for any $x/s\in (\Sigma_I\times
+\Sigma_O)^*$,  $x/s\in L(T(Q))\Rightarrow x/s\in L(T(P))$ holds. It is
+trivial if $\#(x/s)=0$ because $x = s = \varepsilon$, which is in the
+language of every FSM. Suppose $x/s\in L(T(Q))\Rightarrow x/s\in L(T(P))$
+holds for any $x/s\in (\Sigma_I\times \Sigma_O)^*$ of length $k\ge 0$. For
+any $x/s\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any $A/e\in
+\Sigma_I\times \Sigma_O$. Let $s' = s\project \Sigma$ and $s'' = (s.e)\project
+\Sigma$.
+%
+\begin{argue}
+  x.A/s.e\in L(T(Q))
+  \\
+  \Rightarrow x/s\in L(T(Q))\wedge \big((e\in A\wedge s'\in \trc(Q))\vee (e=\bot\wedge (s',A)\in \failure(Q))\big)
+  \\
+  & prefix closure of $L(T(Q))$ and Lemma~\ref{exte}
+  \\
+  \Rightarrow x/s\in L(T(P))\wedge \big((e\in A\wedge s'\in \trc(P)\big)\vee (e=\bot\wedge (s',A)\in \failure(P))\big)
+  \\
+  & induction hypothesis and $ P\,\sqsubseteq_F\, Q$
+  \\
+  \Rightarrow x.A/s.e\in L(T(P)) & Lemma~\ref{exte}
+\end{argue}
+%
+Hence $ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$.
 \end{proof}
 %
 In the next section, we consider {\bf SC2} for the test case map.
