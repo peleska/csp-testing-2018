@@ -192,6 +192,9 @@ of the process and the machine of arbitrary length.
 %
 %------------------------------------------------------------------
 %
+With the above two lemmas, we below relate the language of the FSM with the
+trace and failure semantics of the CSP process that originated the FSM.
+%
 \begin{lemma}\label{exte}
 Let $x/s\in L(T(P))$. Let $A/e\in \Sigma_I\times \Sigma_O$. Then
 \begin{eqnarray*}
@@ -209,10 +212,12 @@ $G(P)/s'=\underline q\after x/s$. From Lemma~\ref{tran} we have the following:
 &\Leftrightarrow & (e\in A\wedge (s.e)\project \Sigma\in \trc(P)\big)\vee \big(e=\bot\wedge (s\project \Sigma, A)\in \failure(P)\big)\end{array}
 \]
 \end{proof}
-
-
+%
 %----------------------------------------------------------------------------
-%----------------------------------------------------------------------------
+%
+Next we show that every trace of a process is represented in the FSM defined
+by our map.
+%
 \begin{lemma}\label{cont}
 For any $s\in \Sigma^*$,
 $$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
@@ -220,8 +225,11 @@ $$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
 %
 %--------------------------------------------------------------------------------------------------
 \begin{proof}
-Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$ the length of $s$. Suppose $s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with $\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and $e\in\Sigma$.
-Then \[\begin{array}{llll}
+Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$. Suppose
+$s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow
+x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with
+$\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and
+$e\in\Sigma$. Then \[\begin{array}{llll}
 && s.e\in \trc(P)\\
 &\Leftrightarrow & s\in \trc(P)\wedge s.e\in \trc(P)\\
 &\Leftrightarrow &  \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge s.e\in \trc(P)\\
