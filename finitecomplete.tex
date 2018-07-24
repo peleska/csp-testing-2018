@@ -167,14 +167,27 @@ of the process and the machine of arbitrary length.
   (\Sigma_I\times\Sigma_O)^*$ with $\#(x/s)=k$, for some $k\ge 0$. Let
   $x/s\in (\Sigma_I\times\Sigma_O)^*$ with $\#(x/s)=k$ and $A/e\in
   \Sigma_I\times \Sigma_O$. To perform the induction step, let $s\project
-  \Sigma=s'$ and $(s.e) \project \Sigma=s''$. By the induction hypothesis, we
+  \Sigma=s'$ and $(s.e) \project \Sigma=s''$. We need to prove that $s'' \in
+  \trc(P)$ and $q\after x.A/s.e = G(P)/s''$. By the induction hypothesis, we
   have $s'\in\trc(P)$ and $\underline q\after x/s=G(P)/s'$. Since $x.A/s.e\in
   L(T(P))$, there is a transition $(G(P)/s',A,e,n)\in h$ with $n=\underline
-  q\after x.A/s.e$. By Lemma~\ref{tran}, we have
-  $s''\project\Sigma=((s'.e)\project\Sigma) \project\Sigma =
-  (s'.e)\project\Sigma\in \trc(P)\wedge \underline q\after x.A/s.e=G(P)/s''$
-  for both cases $e\in\Sigma$ and $e=\bot$.
-
+  q\after x.A/s.e$. We consider two cases. In
+  the first, $e \in A$, and so $e \in \Sigma$. We obtain the required results
+  as follows. We note that
+  %
+  \begin{argue}
+    s'' = (s.e) \project \Sigma = (s \project \Sigma).e = s'.e
+  \end{argue}
+  and $s'.e \in \trc(P)$ follows from Lemma~\ref{tran}. For $q\after
+  x.A/s.e$, we note that it is $n$, which, by Lemma~\ref{tran} is $G(P)/s'.e
+  = G(P)/s''$ as shown above. In the second case, $e = \bot$. So, we note
+  %
+  \begin{argue}
+    s'' = (s.\bot) \project \Sigma = s \project \Sigma = s'
+  \end{argue}
+  Lemma~\ref{tran} gives that $(s',A) \in \failure(P)$ and so $s' \in
+  \trc(P)$. Finally, for $q\after x.A/s.e$, we note that it is $n$, which, by
+  Lemma~\ref{tran} is $G(P)/s = G(P)/s''$ as shown above. 
 \end{proof}
 %
 %------------------------------------------------------------------
