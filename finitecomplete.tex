@@ -222,49 +222,66 @@ by our map.
 For any $s\in \Sigma^*$,
 $$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
 \end{lemma}
-%
-%--------------------------------------------------------------------------------------------------
 \begin{proof}
 Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$. Suppose
-$s=\varepsilon $, then $s\in \trc(P)\wedge x=\varepsilon \Leftrightarrow
-x/s\in L(T(P))$. Suppose the statement holds for all $s\in \Sigma^*$ with
-$\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and
-$e\in\Sigma$. Then \[\begin{array}{llll}
-&& s.e\in \trc(P)\\
-&\Leftrightarrow & s\in \trc(P)\wedge s.e\in \trc(P)\\
-&\Leftrightarrow &  \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge s.e\in \trc(P)\\
-&\Rightarrow & \exists x\in \Sigma_I^*: x.\{e\}/s.e\in L(T(P))&[{\text{Lemma~\ref{exte}}}]\\
-&\Rightarrow & \exists x\in \Sigma_I^*: x/s.e\in L(T(P))
-\end{array}
-\]
- \[\begin{array}{llll}
-&& \exists x\in \Sigma_I^*: x/s.e\in L(T(P))\\
-&\Leftrightarrow & \exists x\in \Sigma_I^*\wedge \exists x'\in \Sigma_I: x/s\in L(T(P))\wedge x.x'/s.e\in L(T(P))\\
-&\Rightarrow & s.e\in \trc(P)&[{\text{Lemma~\ref{trac}}}]\\
-\end{array}
-\]
-\end{proof}
-%----------------------------------------------------------------------------
+$s=\varepsilon $, then $s\in \trc(P)$ because the empty trace is a trace of
+every process.  Also, we recall that $(q,\varepsilon,\varepsilon,q) \in h$
+for every $q$, by convention. So, $\varepsilon/\varepsilon \in L(T(P))$.
+Therefore, $\exists x\in \Sigma_I^*: x/\varepsilon \in L(T(P))$ as required
+for the base case.
 
-%---------------------------------------------------------------------------
+For the induction step, suppose the statement holds for all $s\in \Sigma^*$
+with $\#s=k$, for some $k\ge 0$. Let $s\in \Sigma^*$ with $\#s=k$ and
+$e\in\Sigma$. Then we prove the equivalence by considering implication in each direction.
+\begin{argue}
+  s.e\in \trc(P)
+  \\
+  \Leftrightarrow s\in \trc(P)\wedge s.e\in \trc(P) & prefix closure of CSP traces
+  \\
+  \Leftrightarrow \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge s.e\in \trc(P) & induction hypothesis
+  \\
+  \Rightarrow \exists x\in \Sigma_I^*: x.\{e\}/s.e\in L(T(P))& {\text{Lemma~\ref{exte}}} and $(s.e) \project \Sigma = s.e$
+  \\
+  \Rightarrow \exists x\in \Sigma_I^*: x/s.e\in L(T(P)) & predicate calculus
+\end{argue}
+For the implication in the other direction, we have the following.
+\begin{argue}
+  \exists x\in \Sigma_I^*: x/s.e \in L(T(P))
+  \\
+  \Leftrightarrow \exists x\in \Sigma_I^*\wedge \exists x'\in \Sigma_I: x/s\in L(T(P))\wedge x.x'/s.e\in L(T(P))
+  & in $x/s.e$, we have $\# x = \# s.e$
+  \\
+  \Rightarrow s.e\in \trc(P)& {\text{Lemma~\ref{trac}}} and $(s.e) \project \Sigma = s.e$
+\end{argue}
+\end{proof}
+%
+%----------------------------------------------------------------------------
+%
+Similarly, every failure of a process is represented in the FSM defined
+by our map.
 \begin{lemma}\label{conf}
-For any $s\in \Sigma^*$ and $x'\in \Sigma_I$,
-$$(s,   x')\in {\text {\rm Fail}}(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.x'/s.\bot \in L(T(P))$$
+For any $s\in \Sigma^*$ and $R\in \Sigma_I$,
+$$(s,R)\in \failure(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.R/s.\bot \in L(T(P))$$
 \end{lemma}
 \begin{proof}
-$\forall s\in \Sigma^*, x'\in \Sigma_I$:
-\[\begin{array}{llll}
-&& \exists x\in \Sigma_I^*: x.x'/s.\bot\in L(T(P))&\\
-&\Leftrightarrow & \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge x.x'/s.\bot\in L(T(P))&\\
-&\Leftrightarrow & (s,   x')\in {\text {\rm Fail}}(P)&[{\text {Lemma~\ref{exte} and ~\ref{cont}}}]
-
-\end{array}
-\]
+\begin{argue}
+  \exists x\in \Sigma_I^*: x.R/s.\bot\in L(T(P))
+  \\
+  \Leftrightarrow \exists x\in \Sigma_I^*: x/s\in L(T(P))\wedge x.R/s.\bot\in L(T(P))
+  & definition of $L$
+  \\ %
+  \Leftrightarrow (s,R)\in \failure(P)& {\text {Lemmas~\ref{exte} and \ref{cont}}}
+\end{argue}
 \end{proof}
+%
 %------------------------------------------------------------------------------
+%
+We finally get to the main result of this section, which establishes that our
+map satisfies {\bf SC1}. The conformance relations are failures refinement
+and FSM reduction.
 \begin{theorem}
-Let $P,Q$ be two CSP processes over the same alphabet $\Sigma$. Then\\
-$T(Q)\preceq T(P) \Leftrightarrow P\,\sqsubseteq_F\, Q$
+Let $P,Q$ be two CSP processes over the same alphabet $\Sigma$. Then
+$T(Q)\preceq T(P) \Leftrightarrow P\,\sqsubseteq_F\, Q$.
 \end{theorem}
 \begin{proof}
 Suppose $T(Q)\preceq  T(P)$. Let $s\in \Sigma^*, x'\in \Sigma_I$. Then by Lemma~\ref{cont} and Lemma~\ref{conf}
@@ -296,7 +313,8 @@ For any $x/y\in (\Sigma_I\times \Sigma_O)^*$ of length $k$ and for any   $x'/y'\
 \]
 Hence $$ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$$.
 \end{proof}
-
+%
+In the next section, we consider {\bf SC2} for the test case map.
 
 % ==========================================================================
 \subsection{A Test Case Map from Finite State Machines to CSP Processes}
