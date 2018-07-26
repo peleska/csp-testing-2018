@@ -452,13 +452,14 @@ failures refinement. They are also needed in the proof of the satisfaction condi
 
 \begin{lemma}\label{lemma:fsmT}
 Let $M = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ be an FSM in the range of the model map $T$. 
-Then the following facts hold for all $q\in Q$, $A_i\in\Sigma_I$, $e\in\Sigma$, and 
+Then the following facts hold for all $q\in Q$, $A, A_i\in\Sigma_I$, $e\in\Sigma$, and 
 $u_i \in (\Sigma_I\times\Sigma_O)^*$.
 \begin{eqnarray}
 (A_1/\bot).(A_2/\bot)\in L(q) & \Leftrightarrow  &(A_2/\bot).(A_1/\bot)\in L(q)
 \label{eq:eq1}
 \\
-u_1.(A_1/\bot)\dots(A_k/\bot).u_2\in L(q) & \Leftrightarrow & u_1.u_2\in L(q)
+u_1.(A/\bot).u_2\in L(q) & \Leftrightarrow & u_1.u_2\in L(q) \wedge 
+(A/\bot)\in L(\ii q\after u_1)
 \label{eq:eq2}
 \\
 (A_1/\bot) \in L(q) \wedge A_2\subseteq A_1 & \Rightarrow & (A_2/\bot) \in L(q)
