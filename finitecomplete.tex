@@ -74,23 +74,23 @@ differ by the presence or absence of $\bot$.
 For the CSP process $P$ and its transition graph $G(P)$ discussed in
 Example~\ref{ex:a}, the FSM $T(P)$ is depicted in Fig.~\ref{fig:fsm0}. For
 displaying its transitions, we use notation
-$$
+\[
 (\text{condition}(A)) / e
-$$
+\]
 which stands for a set of transitions between the respective nodes: one transition per non-empty set $A\subseteq \Sigma$ fulfilling the specified condition.
 The arrow
-$$
+\[
 \text{Node\_0} \xrightarrow{(a\in A) / a} \text{Node\_2},
-$$
+\]
 for example, stands for FSM transitions
-$$
+\[
 \begin{array}{l}
 \text{Node\_0} \xrightarrow{\{a\}/a} \text{Node\_2} \\
 \text{Node\_0} \xrightarrow{\{a,b\}/a} \text{Node\_2} \\
 \text{Node\_0} \xrightarrow{\{a,c\}/a} \text{Node\_2} \\
 \text{Node\_0} \xrightarrow{\{a,b,c\}/a} \text{Node\_2} \\
 \end{array}
-$$
+\]
 \end{example}
 %
 \noindent%
@@ -141,8 +141,8 @@ of the process and the machine of arbitrary length.
 \begin{lemma}\label{trac}
   Let $x/s \in (\Sigma_I\times\Sigma_O)^*$ and $s' = s\project \Sigma$.
   Then
-  $$
-    x/s \in L(T(P))\Rightarrow s' \in \trc(P) \wedge \underline q \after x/s = G(P)/s'.$$
+  \[
+    x/s \in L(T(P))\Rightarrow s' \in \trc(P) \wedge \underline q \after x/s = G(P)/s'.\]
 \end{lemma}
 \begin{proof}
   We prove the lemma by induction on $\#(x/y)$, the length of $x/y$.
@@ -220,7 +220,7 @@ by our map.
 %
 \begin{lemma}\label{cont}
 For any $s\in \Sigma^*$,
-$$s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).$$
+\[s\in \trc(P) \Leftrightarrow \exists x\in \Sigma_I^*: x/s \in L(T(P)).\]
 \end{lemma}
 \begin{proof}
 Let $s\in \Sigma^*$. We prove the lemma by induction on $\#s$. Suppose
@@ -261,7 +261,7 @@ Similarly, every failure of a process is represented in the FSM defined
 by our map.
 \begin{lemma}\label{conf}
 For any $s\in \Sigma^*$ and $R\in \Sigma_I$,
-$$(s,R)\in \failure(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.R/s.\bot \in L(T(P))$$
+\[(s,R)\in \failure(P)\Leftrightarrow \exists x\in \Sigma_I^*: x.R/s.\bot \in L(T(P))\]
 \end{lemma}
 \begin{proof}
 \begin{argue}
@@ -336,6 +336,8 @@ Hence $ P\,\sqsubseteq_F\, Q \Rightarrow T(Q)\preceq  T(P)$.
 %
 In the next section, we consider {\bf SC2} for the test case map.
 
+
+
 % ==========================================================================
 \subsection{A Test Case Map from Finite State Machines to CSP Processes}
 \label{sec:tcmap}
@@ -350,9 +352,9 @@ then for CSP. Afterwards, we define a map between these test cases that satisfie
 
 Following~\cite{DBLP:conf/hase/PetrenkoY14},
 an \emph{adaptive FSM test case}
-$$
+\[
 tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)
-$$
+\]
 is a nondeterministic, observable, output-complete, acyclic FSM that provides
 only a single input in any given state. Running in intersection mode with the
 SUT, the test case provides a specific input to the SUT determined by the
@@ -369,14 +371,30 @@ of the FSM are not labelled with further inputs.
 There is no requirement that an FSM test case running in intersection mode against
 an FSM $M$ acting as SUT should {\it always} reach the PASS state. Since the SUT may be nondeterministic, it may perform a joint test execution that blocks before
 the test case's PASS state is reached. In such a case, the result of the test execution is \emph{inconclusive}. Due to nondeterminism, for $M$ to pass a test case, it
-has to checked that {\it every possible} test execution of  $tc_\text{FSM}$ against $M$
+has to be 
+checked that {\it every possible} test execution of  $tc_\text{FSM}$ against $M$
 terminates either in PASS, or that the result remains inconclusive. If one execution ends in FAIL, the test verdict is FAIL. More formally,
-$$
-M\ \pass\ tc_\text{FSM} \equiv
+\[
+M\ \passred\ tc_\text{FSM} \equiv
 \big(
 \forall x/y \in L(M)\cap L(tc_\text{FSM}): \ii q\after(x/y) \neq FAIL
 \big).
-$$
+\]
+It will turn out in the exposition below that this pass criterion is appropriate for 
+testing the reduction conformance relation. For equivalence testing, it is also of 
+interest whether {\it all} pass-traces of an adaptive test case are contained
+in the language of the FSM under test. This induces a second pass criterion specified by
+\begin{eqnarray*}
+M\ \passeq\ tc_\text{FSM} & \equiv &
+\big(
+\forall x/y \in L(M)\cap L(tc_\text{FSM}): \ii q\after(x/y) \neq \text{FAIL}
+\big) \wedge
+\\ & &
+\big(
+\forall x/y \in L(tc_\text{FSM}): \ii q\after(x/y) = \text{PASS} \Rightarrow
+x/y\in L(M)
+\big)
+\end{eqnarray*}
 
 \begin{example}{ex:xx}
 Consider the FSM test case depicted in Fig.~\ref{fig:fsm0tc} which is specified
@@ -401,7 +419,10 @@ as defined in the pass-criterion (\ref{eq:passeq}).
 When testing for language equivalence as specified in (\ref{eq:passeq}), it is additionally required that {\it all} pass traces need to be contained in $L(M)$.
 
 
-It is easy to see how adaptive test cases can be transformed into their denotational representation and vice versa.
+It is easy to see how adaptive test cases can be transformed into their denotational representation. Conversely, it is easy to transform a test case $U = (\xpass U,\xfail U)$
+into one or more adaptive test cases. Since the denotational test case representation
+is very general, however, it is not guaranteed that they can always be transformed into {\it a single} adaptive test case: this is due to the fact that adaptive test cases
+are required to be single-input.
 \begin{example}{ex:tctransform}
 Consider again the adaptive FSM test case depicted in Fig.~\ref{fig:fsm0tc}.
 It pass-traces and fail-traces are given by
@@ -441,9 +462,10 @@ This can be directly derived by performing a reachability analysis for the state
 % ...................................................................................
 
 
-
-% -------------------------------------------------------------------------
+% =========================================================================
 \subsubsection{FSMs in the Range of the Model Map}
+\label{sec:fsmT}
+% =========================================================================
 
 We will now state some facts about FSMs in the range of the model map; these will be exploited in the definition of effective CSP test cases for failures equivalence and
 failures refinement. They are also needed in the proof of the satisfaction condition
@@ -467,27 +489,31 @@ u_1.(A/\bot).u_2\in L(q) & \Leftrightarrow & u_1.u_2\in L(q) \wedge
 \\
 (A_1/e) \in L(q) \wedge A_1\subseteq A_2 & \Rightarrow & (A_2/e) \in L(q)
 \label{eq:eq4}
+\\
+(A/e) \in L(q) \Rightarrow e\in A
+\label{eq:eq5}
 \end{eqnarray}
 \end{lemma}
 \begin{proof}
-Formulas (\ref{eq:eq1}) and (\ref{eq:eq2}) are a direct consequence of the fact that all
+Formulas (\ref{eq:eq1}) and (\ref{eq:eq2}) are  direct consequences of the fact that all
 transitions labelled with output $\bot$ are self-loops. Formula (\ref{eq:eq3})  is 
 a direct consequences of the fact that refusals are subset-closed, and  
 $(A_1/\bot) \in L(q)$ if and only if $A_1$ is contained in some refusal of the
 CSP transition graph node $q$ (recall that the model map maps graph nodes to FSM states
 in one-one fashion). 
 For proving Formula (\ref{eq:eq4}), we note that $(A_1/e) \in L(q)$ if and only if
-the CSP transition graph contains an outgoing transition from graph node $q$ which is labelled by $e$. Since $A_2$ is supposed to be a super-set of $A_1$, this property holds for $A_2$ as well.
+the CSP transition graph contains an outgoing transition from graph node $q$ which is labelled by $e$. Since $A_2$ is supposed to be a super-set of $A_1$, this property holds for $A_2$ as well. Formula (\ref{eq:eq5}) follows from the definition of the 
+model map $T$ which specifies $e\in A$ as a necessary condition for FSM transitions $h(q,A,e,q')$ with $e\in \Sigma$.
 \end{proof}
 
 The following theorem states that complete test suites for FSMs in the range of the 
 model map can be simplified in such a way, that every pass-trace contains at most one
 self-transition $(A/\bot)$, and this only occurs at the end of the trace.
 
-\begin{theorem}
+\begin{theorem}\label{th:fsmT}
 Let $M = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ be an FSM in the range of the model map $T$. 
 Let $\TS$ be  a complete test suite for verifying reduction or refinement with a fault domain that is also in the range of the model map. Let $\TS'$ be another test suite satisfying the following conditions.
-$$
+\[
 \def\arraystretch{1.2}
 \begin{array}{l}
 \text{[Condition~1.]}
@@ -517,7 +543,7 @@ $$
  \big)
 \end{array}
 \def\arraystretch{1}
-$$
+\]
 Then $\TS'$ is also complete for the same conformance relation and fault domain.
 \end{theorem}
 \begin{proof}
@@ -564,6 +590,23 @@ assume that $a\in L(M')$ for some fail-trace of a test case of $\TS$. Now we can
 apply the same argument as for the exhaustiveness Case (1) described for equivalence testing above to prove the existence of a fail-trace $a'$ from test suite $\TS'$ which is also contained in $M'$'s language. This completes the proof. 
 \end{proof}
 
+Next, it is shown that every test case in denotational representation can be
+transformed into a set of adaptive test cases.
+
+\begin{theorem}
+Let $U = (\xpass U, \xfail U)$ be a test case. Then there exists a set ${\cal A}(U)$
+of adaptive test cases that are equivalent to $U$ in the sense that 
+\begin{eqnarray*}
+M\ \passeq\ U & \Leftrightarrow & \forall U_A\in {\cal A}(U): M\ \passeq\ U_A
+\\
+M\ \passred\ U & \Leftrightarrow & \forall U_A\in {\cal A}(U): M\ \passred\ U_A
+\end{eqnarray*}
+\end{theorem}
+\begin{proof}
+aa
+\end{proof}
+
+
 
 % -------------------------------------------------------------------------
 \subsubsection{CSP Test Cases}
@@ -574,17 +617,17 @@ $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
  verdict PASS ($\tick$). The test case runs in parallel with the SUT $P$,
  synchronising over all events from the visible alphabet $\Sigma$ of $P$. This is
  expressed by the formula
- $$
+ \[
  P\parallel[\Sigma] tc_\text{CSP}.
- $$
+ \]
 
  In analogy to FSM test cases, a CSP process $P$ passes a test case $tc_\text{CSP}$
  if the traces of the parallel composition do not contain the failure event, that is,
- $$
+ \[
  P\ \pass\ tc_\text{CSP} \equiv \big(
  \forall s\in\trc(P\parallel[\Sigma] tc_\text{CSP}): (s\project \{\dag\}) = \varepsilon
  \big)
- $$
+ \]
 
 
  In principle, very general classes of CSP processes can be
@@ -595,20 +638,28 @@ $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
 % -------------------------------------------------------------------------
 \subsubsection{Test Case Map}
 
-The test case map $T^* :TC(FSM) \fun TC(CSP)$ is specified with respect to a fixed
+The test case map $T^* :TC(FSM) \pfun TC(CSP)$ is specified with respect to a fixed
 CSP process alphabet $\Sigma$ extended by the events $\{\dag,\bot,\tick \}$ introduced
 above
 and the associated FSM input and output alphabets
 $\Sigma_I = \power(\Sigma)-\{\varnothing\}$ and $\Sigma_O=\Sigma\cup \{\bot \}$.
-Given an FSM test case $tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)$,
+As a consequence of Theorem~\ref{th:fsmT}, the domain of $T^*$ may be restricted to
+test cases $U = (\xpass U,\xfail U)$ of the form where every pass-trace $u\in\xfail U$
+or fail-trace $a\in\xfail U$ contains I/O-pairs $(A/\bot), A\in \Sigma_I$, if any, at the very last element of the trace. Theorem~\ref{th:fsmT} implies that {\it any} complete
+test suite for FSMs in the range of the model map $T$ can be represented by means of
+test cases fulfilling this condition.
+
+
+
+
+
+Given such an FSM test case $tc_\text{FSM}=(Q,\ii q,\Sigma_I,\Sigma_O,h,in)$,
 the image $T^*(tc_\text{FSM})$ is the CSP process $tc_\text{CSP}$ specified
 as follows.
 \begin{eqnarray*}
 tc_\text{CSP} & = & tc(\ii q)
 \\
 tc(q) & = & \big( e :  A(q) \then  tc(q\after (in(q)/e)) \big)
-\\ & & \extchoice
-\\ & & \big((q\after(in(q)/\bot)\not\in \{\text{PASS},\text{FAIL}\}) \& \bot\then \Skip\big)
 \\ & & \extchoice
  \big( e : A_\text{PASS}(q)   \then \tick \then \Skip \big)
 \\ & & \extchoice
@@ -700,10 +751,10 @@ regarding the test case map, the model map, and the pass conditions for tests on
 \begin{theorem}
 Fixing a CSP process alphabet $\Sigma$, the model map
 $T : \underline{Sig}_1 \fun FSM$ and the test case map $T^*:TC(FSM) \fun TC(CSP)$ fulfil satisfaction condition {\bf SC2} in the sense that
-$$
+\[
 \forall P\in \underline{Sig}_1, tc_\text{FSM}\in TC(FSM): T(P)\ \pass_2\ tc_\text{FSM} \Leftrightarrow
 P\ \pass_1\ T^*(tc_\text{FSM})
-$$
+\]
 \end{theorem}
 \begin{proof}
 Let $T(P) = (Q,\ii q,\Sigma_I,\Sigma_O,h)$ and
@@ -722,22 +773,22 @@ $u\project\Sigma$ corresponds to $x/s$.
 
 \item For all $x/s\in L(T(P))$,
 the graph nodes of $G(P)$ and the states of $T(P)$ are related by
-$$
+\[
 \begin{array}{l}
 G(P)/(s\project\Sigma) = \ii q\after (x/s).
 \end{array}
-$$
+\]
 
 \item FSM test $tc_\text{FSM}$ and CSP test $T^*(tc_\text{FSM})$ perform consistent
 state changes, in the sense that
-$$
+\[
 \begin{array}{l}
 x/s\in L(T(P))\cap L(tc_\text{FSM}) \wedge  \ii q'\after (x/s) \not\in \{\text{PASS},\text{FAIL}\}
 \Rightarrow {}
 \\\tabd
 T^*(tc_\text{FSM})/(s\project \Sigma) = tc(\ii q'\after (x/s)),
 \end{array}
-$$
+\]
 where $tc(q)$ has been defined above with the test case map.
 
 \end{enumerate}
