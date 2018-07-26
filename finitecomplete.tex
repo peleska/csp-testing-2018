@@ -346,7 +346,7 @@ then for CSP. Afterwards, we define a map between these test cases that satisfie
 {\bf SC2} as required.
 
 % -------------------------------------------------------------------------
-\subsubsection*{FSM Test Cases}
+\subsubsection{FSM Test Cases}
 
 Following~\cite{DBLP:conf/hase/PetrenkoY14},
 an \emph{adaptive FSM test case}
@@ -384,6 +384,49 @@ for the same input and output alphabets as defined for  the FSM presented in Exa
 intersecting the two state machines results in an FSM which always reaches the PASS state.
 \end{example}
 
+While adaptive test cases are an operational representation of tests, an alternative, equivalent, denotational description can be given by means of \emph{pass-traces} and \emph{fail-traces}, as introduced in~\cite{huang_peleska_2017sttt}: a test case 
+$U = (\xpass U,\xfail U)$ consists of two sets of traces 
+$\xpass U, \xfail U\subseteq L(M)$, such that $\xpass U \cap \xfail U = \varnothing$.
+We introduce two pass-criteria that will be used later on to distinguish tests for equivalence and tests for refinement.
+\begin{eqnarray}
+M\ \passeq\ U & \equiv & \xpass U \subseteq L(M) \wedge L(M)\cap \xfail U =\varnothing
+\label{eq:passeq}
+\\
+M\ \passred\ U & \equiv & L(M)\cap \xfail U =\varnothing
+\label{eq:passred}
+\end{eqnarray}
+By definition, both pass criteria require that none of the fail-traces are contained
+in the language of the FSM under test. This suffices when testing for language inclusion,
+as defined in the pass-criterion (\ref{eq:passeq}).
+When testing for language equivalence as specified in (\ref{eq:passeq}), it is additionally required that {\it all} pass traces need to be contained in $L(M)$.
+
+
+It is easy to see how adaptive test cases can be transformed into their denotational representation and vice versa.
+\begin{example}{ex:tctransform}
+Consider again the adaptive FSM test case depicted in Fig.~\ref{fig:fsm0tc}.
+It pass-traces and fail-traces are given by
+\begin{eqnarray*}
+\xpass U & =  & \{ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/\bot).(\{a\}/a),
+\\ & & \ \ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/c).(\{c\}/c)
+\}
+\\ & & {~} \\
+\xfail U & = & \{ (\{a,b,c\}/b), (\{a,b,c\}/c), (\{a,b,c\}/\bot),
+\\ & & \ \ (\{a,b,c\}/a).(\{c\}/a), (\{a,b,c\}/a).(\{c\}/b), (\{a,b,c\}/a).(\{c\}/\bot),
+\\ & & \ \ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/a), (\{a,b,c\}/a).(\{c\}/c).(\{c\}/b),
+\\ & & \ \ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/\bot).(\{a\}/b),
+(\{a,b,c\}/a).(\{c\}/c).(\{c\}/\bot).(\{a\}/c),
+\\ & & \ \ 
+(\{a,b,c\}/a).(\{c\}/c).(\{c\}/\bot).(\{a\}/\bot),
+\\ & & \ \ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/c).(\{c\}/a),
+(\{a,b,c\}/a).(\{c\}/c).(\{c\}/c).(\{c\}/b),
+\\ & & \ \ 
+(\{a,b,c\}/a).(\{c\}/c).(\{c\}/c).(\{c\}/\bot)
+\}
+\end{eqnarray*}
+This can be directly derived by performing a reachability analysis for the states PASS and FAIL, respectively, using the graph representation in Fig.~\ref{fig:fsm0tc}.
+\end{example}
+
+
 
 % ...................................................................................
  \begin{figure}
@@ -399,9 +442,130 @@ intersecting the two state machines results in an FSM which always reaches the P
 
 
 
+% -------------------------------------------------------------------------
+\subsubsection{FSMs in the Range of the Model Map}
+
+We will now state some facts about FSMs in the range of the model map; these will be exploited in the definition of effective CSP test cases for failures equivalence and
+failures refinement. They are also needed in the proof of the satisfaction condition
+{\bf SC2} showing the correctness of the test case map to be constructed below.
+
+
+\begin{lemma}\label{lemma:fsmT}
+Let $M = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ be an FSM in the range of the model map $T$. 
+Then the following facts hold for all $q\in Q$, $A_i\in\Sigma_I$, $e\in\Sigma$, and 
+$u_i \in (\Sigma_I\times\Sigma_O)^*$.
+\begin{eqnarray}
+(A_1/\bot).(A_2/\bot)\in L(q) & \Leftrightarrow  &(A_2/\bot).(A_1/\bot)\in L(q)
+\label{eq:eq1}
+\\
+u_1.(A_1/\bot)\dots(A_k/\bot).u_2\in L(q) & \Leftrightarrow & u_1.u_2\in L(q)
+\label{eq:eq2}
+\\
+(A_1/\bot) \in L(q) \wedge A_2\subseteq A_1 & \Rightarrow & (A_2/\bot) \in L(q)
+\label{eq:eq3}
+\\
+(A_1/e) \in L(q) \wedge A_1\subseteq A_2 & \Rightarrow & (A_2/e) \in L(q)
+\label{eq:eq4}
+\end{eqnarray}
+\end{lemma}
+\begin{proof}
+Formulas (\ref{eq:eq1}) and (\ref{eq:eq2}) are a direct consequence of the fact that all
+transitions labelled with output $\bot$ are self-loops. Formula (\ref{eq:eq3})  is 
+a direct consequences of the fact that refusals are subset-closed, and  
+$(A_1/\bot) \in L(q)$ if and only if $A_1$ is contained in some refusal of the
+CSP transition graph node $q$ (recall that the model map maps graph nodes to FSM states
+in one-one fashion). 
+For proving Formula (\ref{eq:eq4}), we note that $(A_1/e) \in L(q)$ if and only if
+the CSP transition graph contains an outgoing transition from graph node $q$ which is labelled by $e$. Since $A_2$ is supposed to be a super-set of $A_1$, this property holds for $A_2$ as well.
+\end{proof}
+
+The following theorem states that complete test suites for FSMs in the range of the 
+model map can be simplified in such a way, that every pass-trace contains at most one
+self-transition $(A/\bot)$, and this only occurs at the end of the trace.
+
+\begin{theorem}
+Let $M = (Q,\ii q, \Sigma_I,\Sigma_O,h)$ be an FSM in the range of the model map $T$. 
+Let $\TS$ be  a complete test suite for verifying reduction or refinement with a fault domain that is also in the range of the model map. Let $\TS'$ be another test suite satisfying the following conditions.
+$$
+\def\arraystretch{1.2}
+\begin{array}{l}
+\text{[Condition~1.]}
+\\
+  \forall U = (\xpass U,\xfail U)\in\TS: \exists  U' = (\xpass U',\xfail U')\in\TS':
+\\\tabc
+\big( \forall u\in \xpass U: \exists u'\in \xpass U': 
+ last(u) = last(u') \wedge front(u\project(\Sigma_I\times\Sigma)) = front(u')\big)
+ \wedge {} 
+ \\\tabc
+ \big( \forall u\in \xfail U: \exists u'\in \xfail U': 
+ last(u) = last(u') \wedge front(u\project(\Sigma_I\times\Sigma)) = front(u')\big)
+ \\ {~}
+ \\
+ \text{[Condition~2.]}
+\\
+  \forall U = (\xpass U,\xfail U)\in\TS, A\in\Sigma_I: 
+  \exists  U' = (\xpass U',\xfail U')\in\TS':
+\\\tabc
+\big( \forall u.(A/\bot).v\in \xpass U: \exists u'\in \xpass U': 
+ u' = (u\project(\Sigma_I\times\Sigma)).(A/\bot)
+ \big)
+ \wedge {} 
+ \\\tabc
+\big( \forall u.(A/\bot).v\in \xfail U: \exists u'\in \xfail U': 
+ u' = (u\project(\Sigma_I\times\Sigma)).(A/\bot)
+ \big)
+\end{array}
+\def\arraystretch{1}
+$$
+Then $\TS'$ is also complete for the same conformance relation and fault domain.
+\end{theorem}
+\begin{proof}
+We first consider the pass-criterion $\passeq$ for language equivalence.
+It first has to be shown that $\TS'$ is also sound; this means that conforming 
+implementations will pass all test cases of $\TS'$. Suppose therefore that
+$M' \sim M$ for  $M' = (Q',\ii q', \Sigma_I,\Sigma_O,h')$ and let $U' = (\xpass U',\xfail U')\in \TS'$. Let $u'\in\xpass U'$. We have to show that $u'\in L(\ii q)$. From Condition~1 and Condition~2 we conclude that
+there exists a test case $U = (\xpass U,\xfail U)\in \TS$ and a pass-trace
+$u\in\xpass U$ such that (1) 
+$last(u) = last(u') \wedge front(u\project(\Sigma_I\times\Sigma)) = front(u')$ 
+or (2) $u = w.(A/\bot).v$ and $u' = w\project(\Sigma_I\times\Sigma).(A/\bot)$.
+Since $\TS$ is sound, we know that $u\in L(\ii q')$.
+
+
+In Case (1), Lemma~\ref{lemma:fsmT}, (\ref{eq:eq2}) implies that $u'\in L(\ii q')$,
+because $u'$ has been constructed from $u$ by deleting  I/O-pairs $(A/\bot)$.
+In Case (2), $u' = w\project(\Sigma_I\times\Sigma).(A/\bot)$ for some
+$u = w.(A/\bot).v\in\xpass U$. Since $w.(A/\bot).v\in L(\ii q')$, prefix closure of languages gives us $w.(A/\bot)\in L(\ii q')$. 
+Again,  Lemma~\ref{lemma:fsmT}, (\ref{eq:eq2}) implies that $u'\in L(\ii q')$. 
+
+Now it has to be shown that no fail-trace $a' \in \xfail U'$ is contained in the language of $M'$. To this end, we observe that  $a'$ is the prefix of some fail-trace $a\in\xfail U$, where some $(A/\bot)$ I/O-events have been deleted. 
+Lemma~\ref{lemma:fsmT}, (\ref{eq:eq2}) implies that 
+$a'\in L(M') \Leftrightarrow a \in L(M')$. Since $\TS$ is sound and $M'$ conforms to $M$, $a$ is not an element of $L(M')$. Therefore, $a'\not\in L(M')$, so $M'$ also passes the test $U'$.
+This
+completes the proof that $\TS'$ is sound for showing language equivalence.
+
+To show that $\TS'$ is exhaustive for language equivalence, suppose that $M'\not\sim M$.
+Since $\TS$ is complete by assumption, this implies  the existence of a 
+test case $U = (\xpass U,\xfail U)\in\TS$ and (1) a fail-trace $a\in\xfail U$ such that
+$u\in\L(\ii q')$, or (2) the existence of a pass-trace $u\in\xpass U$ which is {\it not} contained in $L(\ii q')$.
+
+For Case (1), Condition~1 ensures the existence of a fail-trace $a'$ which is derived 
+from $a$ by deleting some $(A/\bot)$ I/O-pairs. From Lemma~\ref{lemma:fsmT}, (\ref{eq:eq2}), we know that $a'$ is also in the language of $M'$. Therefore, $M'$ 
+also fails the $\TS'$-test case containing fail-trace $a'$. For Case (2), 
+Condition~1 yields the existence of as pass-trace $u'$ in some test case of $\TS'$
+which is constructed from $u$ by deleting some $(A/\bot)$ I/O-pairs. Now
+Lemma~\ref{lemma:fsmT}, (\ref{eq:eq2}) implies that $u'\not\in L(\ii q')$ because
+$u\not\in L(\ii q')$. Therefore, the $\TS'$ test case containing $u'$ also fails for $M'$. 
+ 
+
+Next, we consider the pass criterion $\passred$ for reduction. First, the soundness of
+$\TS'$ is shown. To this end, we only have to prove that the fail-traces of $U'$ are not contained in $L(M')$ if $M'$ is a reduction of $M$. This follows from the same argument as applied above for the language equivalence case. To prove exhaustiveness, 
+assume that $a\in L(M')$ for some fail-trace of a test case of $\TS$. Now we can
+apply the same argument as for the exhaustiveness Case (1) described for equivalence testing above to prove the existence of a fail-trace $a'$ from test suite $\TS'$ which is also contained in $M'$'s language. This completes the proof. 
+\end{proof}
+
 
 % -------------------------------------------------------------------------
-\subsubsection*{CSP Test Cases}
+\subsubsection{CSP Test Cases}
 \label{sec:csptc}
 A \emph{CSP test case} $tc_\text{CSP}$  is a terminating process with alphabet
 $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
@@ -428,7 +592,7 @@ $\Sigma\cup\{\dag,\bot,\tick \}$, where the extra events stand for
 
 
 % -------------------------------------------------------------------------
-\subsubsection*{Test Case Map}
+\subsubsection{Test Case Map}
 
 The test case map $T^* :TC(FSM) \fun TC(CSP)$ is specified with respect to a fixed
 CSP process alphabet $\Sigma$ extended by the events $\{\dag,\bot,\tick \}$ introduced
