@@ -443,18 +443,39 @@ tc_\text{CSP} & = & tc(\ii q)
 \\
 tc(q) & = & \big( e :  A(q) \then  tc(q\after (in(q)/e)) \big)
 \\ & & \extchoice
+\\ & & \big((q\after(in(q)/\bot)\not\in \{\text{PASS},\text{FAIL}\}) \& \bot\then \Skip\big)
+\\ & & \extchoice
  \big( e : A_\text{PASS}(q)   \then \tick \then \Skip \big)
 \\ & & \extchoice
  \big( e : A_\text{FAIL}(q) \then \dag \then \Skip \big)
 \\ & &
 \\
-A(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \}
+A(q) & = & \{ a\in in(q)~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \}
 \\
 A_\text{PASS}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \}
 \\
 A_\text{FAIL}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}
 \end{eqnarray*}
 
+
+%\begin{eqnarray*}
+%tc_\text{CSP} & = & tc(\ii q)
+%\\
+%tc(q) & = & \big( e :  A(q) \then  tc(q\after (in(q)/e)) \big)
+%\\ & & \extchoice
+% \big( e : A_\text{PASS}(q)   \then \tick \then \Skip \big)
+%\\ & & \extchoice
+% \big( e : A_\text{FAIL}(q) \then \dag \then \Skip \big)
+%\\ & &
+%\\
+%A(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after (in(q)/a)\notin \{\text{PASS},\text{FAIL}\} \}
+%\\
+%A_\text{PASS}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{PASS} \}
+%\\
+%A_\text{FAIL}(q) & = & \{ a\in in(q)\cup\{\bot\}~|~q\after(in(q)/a) = \text{FAIL} \}
+%\end{eqnarray*}
+
+@todo update text to new test case version.
 Intuitively speaking, $tc_\text{CSP}$ offers in each test step the same events to
 the CSP process to be tested as the FSM test case offers to the FSM under test.
 These events are specified in each non-terminating test step by $in(q)$, where
