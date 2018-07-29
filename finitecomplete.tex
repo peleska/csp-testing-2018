@@ -606,6 +606,175 @@ M\ \passred\ U & \Leftrightarrow & \forall U_A\in {\cal A}(U): M\ \passred\ U_A
 aa
 \end{proof}
 
+\begin{algorithm}
+\caption{Conversion of test case $U=(\xpass U,\xfail U)$ to set of adaptive test cases.}
+\label{algo:a1}
+\SetKwFunction{createFromPassTrace}{createFromPassTrace}
+\SetKwFunction{createFromFailTrace}{createFromFailTrace}
+\SetKwFunction{extendByPassTrace}{extendByPassTrace}
+\SetKwFunction{extendByFailTrace}{extendByFailTrace}
+\SetKwFunction{makeComplete}{makeComplete}
+
+\KwData{Finite test case $U=(\xpass U,\xfail U)$.}
+\KwResult{Finite set of adaptive test cases equivalent to $U$.}
+\Begin{
+${\cal A}(U) := \varnothing$\;
+$P := \xpass U$ \;
+$F := \xfail U$ \;
+ \While{$P\cup F\neq\varnothing$} {
+   \If {$P \neq \varnothing$} {
+      $tc = \createFromPassTrace{P}$\;
+      \lWhile{$\extendByPassTrace{$tc,P$}$}{}
+      \lWhile{$\extendByFailTrace{$tc,P$}$}{}
+      \makeComplete{$tc$}\;
+      ${\cal A}(U) := {\cal A}(U)\cup \{ tc \}$\;
+   }
+   \Else {
+    $tc := \createFromFailTrace{P}$\;
+      \lWhile{$\extendByFailTrace{$tc,P$}$}{}
+      \makeComplete{$tc$}\;
+      ${\cal A}(U) := {\cal A}(U)\cup \{ tc \}$\;
+   } 
+ }
+ \Return{${\cal A}(U)$}\;
+}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Initialisation  adaptive test case with pass-trace.}
+\label{algo:aInitP}
+\SetKwFunction{createFromPassTrace}{TestCase createFromPassTrace}
+\SetKwFunction{createTestCase}{createTestCase}
+\createFromPassTrace{{\bf inout} $P : \power((\Sigma_I\times \Sigma_O)^*)$}
+{
+\Begin{
+Select trace $\pi$ from $P$\;
+$P := P - \{ \pi\}$\;
+\Return{\createTestCase{$\pi,\text{PASS}$}}\;
+}
+}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Initialisation  adaptive test case with fail-trace.}
+\label{algo:aInitF}
+\SetKwFunction{createFromFailTrace}{TestCase createFromFailTrace}
+\SetKwFunction{createTestCase}{createTestCase}
+\createFromFailTrace{{\bf inout} $F : \power((\Sigma_I\times \Sigma_O)^*)$}
+{
+\Begin{
+Select trace $\pi$ from $F$\;
+$F := F - \{ \pi\}$\;
+\Return{\createTestCase{$\pi,\text{FAIL}$}}\;
+}
+}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{Initialisation  adaptive test case with given trace and end-state.}
+\label{algo:aInit}
+\SetKwFunction{createTestCase}{TestCase createTestCase}
+\createTestCase{{\bf in} $\pi : (\Sigma_I\times \Sigma_O)^*$, {\bf in} endState : State}
+{
+\Begin{
+{\bf let}\ $\pi = (x_0\dots x_{\#\pi-1})/(y_0\dots y_{\#\pi-1})$\;
+$Q := \{ \ii q, q_1, \dots, q_{\#\pi-1}, endState \}$\;
+$tc := (Q,\ii q, \Sigma_I,\Sigma_O,h,in)$\;
+$in := \{ \ii q \mapsto x_0, q_1\mapsto x_1,\dots,q_{\#\pi-1}\mapsto x_{\#\pi-1}  \}$\;
+$h := \{ (\ii q,x_0,y_0,q_1)  \} \cup \{ (q_i,x_i, y_i,q_{i+1})~|~i= 1,\dots\#\pi - 2  \}
+\cup \{ (q_{\#\pi-1}, x_{\#\pi-1}, y_{\#\pi-1},endState) \}$\;
+\Return{$(Q,\ii q,\Sigma_I,\Sigma_O,h,in)$}\;
+}
+}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Extend adaptive test case under construction with pass-trace.}
+\label{algo:aExtendP}
+\SetKwFunction{extendByPassTrace}{$\mathbb{B}$ extendByPassTrace}
+\SetKwFunction{extendByTrace}{extendByTrace}
+\extendByPassTrace{{\bf inout} tc : TestCase, {\bf inout}\ $P : \power((\Sigma_I\times \Sigma_O)^*)$ }
+{
+\Begin{
+\For{$\pi\in P$} {
+\If {\extendByTrace{$tc,\pi,\mbox{\rm PASS}$}} {
+$P := P - \{ \pi\}$\;
+\Return{$\ist$}\;
+}
+}
+\Return{$\isf$}\;
+}
+}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Extend adaptive test case under construction with fail-trace.}
+\label{algo:aExtendF}
+\SetKwFunction{extendByFailTrace}{$\mathbb{B}$ extendByFailTrace}
+\SetKwFunction{extendByTrace}{extendByTrace}
+\extendByFailTrace{{\bf inout} tc : TestCase, {\bf inout}\ $F : \power((\Sigma_I\times \Sigma_O)^*)$ }
+{
+\Begin{
+\For{$\pi\in F$} {
+\If {\extendByTrace{$tc,\pi,\mbox{\rm FAIL}$}} {
+$F := F - \{ \pi\}$\;
+\Return{$\ist$}\;
+}
+}
+\Return{$\isf$}\;
+}
+}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{Try to extend test case by given trace and end-state.}
+\label{algo:aExtend}
+\SetKwFunction{extendByTrace}{$\mathbb{B}$ extendByTrace}
+\extendByTrace{{\bf inout} tc : TestCase, {\bf in}\ $\pi : (\Sigma_I\times \Sigma_O)^*$, {\bf in} endState : State}
+{
+\Begin{
+{\bf let}\ $\pi = \pi_1.\pi_2 \wedge \pi_1\in L(tc) \wedge \pi_1.\pi_2(0)\not\in L(tc)
+\wedge \pi_2 = (x_0\dots x_m)/(y_0\dots y_m)$ \;
+{\bf let}\ $tc = (Q,\ii q,\Sigma_I,\Sigma_O,h,in) \wedge n = |Q|$\;
+$q := \ii q\after \pi_1$\;
+\lIf{$in(q) \neq x_0 $} {\Return{$\isf$}}
+$Q := Q\cup \{ q_{n+1},\dots,q_{n+m}, endState  \}$\;
+$h := h\cup \{ (q,x_0,y_0,q_n) \} \cup
+\{ (q_{n+j},x_j,y_j,q_{n+j+1})~|~j=1,\dots,m-1 \} \cup \{ (q_{n+m},x_m,y_m,endState) \}$\;
+$in := in\cup \{ q_{n+j} \mapsto x_j~|~j=1,\dots,m \}$\;
+\Return{$\ist$}\;
+}
+}
+\end{algorithm}
+
+
+
+\begin{algorithm}
+\caption{Make test case output-complete.}
+\label{algo:aComplete}
+\SetKwFunction{makeComplete}{makeComplete}
+\makeComplete{{\bf inout} tc : TestCase}
+{
+\Begin{
+{\bf let}\ $tc = (Q,\ii q,\Sigma_I,\Sigma_O,h,in) \wedge n = |Q|$\;
+\For{$q \in Q\setminus \{ \mbox{\rm PASS}, \mbox{\rm FAIL}, \mbox{\rm INC}\}$}{
+\For{$y\in\Sigma_O$}{
+  \lIf{$(in(q)/y)\not\in L(q)$}{
+     $Q := Q\cup \{ \mbox{\rm INC} \}$\;
+     $h := h\cup \{ (q,in(q),y,\mbox{\rm INC}) \}$
+}
+}
+}
+}
+}
+\end{algorithm}
+
 
 
 % -------------------------------------------------------------------------
