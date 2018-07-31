@@ -495,8 +495,11 @@ u_1.(A/\bot).u_2\in L(q) & \Leftrightarrow & u_1.u_2\in L(q) \wedge
 (A_1/e) \in L(q) \wedge A_1\subseteq A_2 & \Rightarrow & (A_2/e) \in L(q)
 \label{eq:eq4}
 \\
-(A/e) \in L(q) \Rightarrow e\in A
+(A/e) \in L(q) & \Rightarrow & e\in A
 \label{eq:eq5}
+\\
+(A_1/e) \in L(q) \wedge (A_2/e) \in L(q) & \Rightarrow & q\after(A_1/e) = q\after (A_2/e)
+\label{eq:eq6} 
 \end{eqnarray}
 \end{lemma}
 \begin{proof}
@@ -509,6 +512,8 @@ in one-one fashion).
 For proving Formula (\ref{eq:eq4}), we note that $(A_1/e) \in L(q)$ if and only if
 the CSP transition graph contains an outgoing transition from graph node $q$ which is labelled by $e$. Since $A_2$ is supposed to be a super-set of $A_1$, this property holds for $A_2$ as well. Formula (\ref{eq:eq5}) follows from the definition of the 
 model map $T$ which specifies $e\in A$ as a necessary condition for FSM transitions $h(q,A,e,q')$ with $e\in \Sigma$.
+Formula (\ref{eq:eq6}) follows from the fact that by definition of the model map, 
+$h(q,A_1,e,q')$ requires $t(q,e) = q'$ and $h(q,A_2,e,q'')$ requires $t(q,e) = q''$, where $t$ is the transition function of the normalised CSP transition graph. Since $t$ is a function, $q'=q''$ follows.
 \end{proof}
 
 The following theorem states that complete test suites for FSMs in the range of the 
