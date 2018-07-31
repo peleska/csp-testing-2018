@@ -405,6 +405,11 @@ intersecting the two state machines results in an FSM which always reaches the P
 While adaptive test cases are an operational representation of tests, an alternative, equivalent, denotational description can be given by means of \emph{pass-traces} and \emph{fail-traces}, as introduced in~\cite{huang_peleska_2017sttt}: a test case 
 $U = (\xpass U,\xfail U)$ consists of two sets of traces 
 $\xpass U, \xfail U\subseteq L(M)$, such that $\xpass U \cap \xfail U = \varnothing$.
+
+
+
+
+
 We introduce two pass-criteria that will be used later on to distinguish tests for equivalence and tests for refinement.
 \begin{eqnarray}
 M\ \passeq\ U & \equiv & \xpass U \subseteq L(M) \wedge L(M)\cap \xfail U =\varnothing
@@ -425,7 +430,7 @@ is very general, however, it is not guaranteed that they can always be transform
 are required to be single-input.
 \begin{example}{ex:tctransform}
 Consider again the adaptive FSM test case depicted in Fig.~\ref{fig:fsm0tc}.
-It pass-traces and fail-traces are given by
+Its pass-traces and fail-traces are given by
 \begin{eqnarray*}
 \xpass U & =  & \{ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/\bot).(\{a\}/a),
 \\ & & \ \ (\{a,b,c\}/a).(\{c\}/c).(\{c\}/c).(\{c\}/c)
@@ -538,7 +543,7 @@ Let $\TS$ be  a complete test suite for verifying reduction or refinement with a
  \big)
  \wedge {} 
  \\\tabc
-\big( \forall u.(A/\bot).v\in \xfail U: \exists u'\in \xfail U': 
+\big( \forall u.(A/\bot).v\in \xfail U: v \neq\varepsilon\Rightarrow\exists u'\in \xpass U': 
  u' = (u\project(\Sigma_I\times\Sigma)).(A/\bot)
  \big)
 \end{array}
