@@ -404,10 +404,10 @@ some authors, see, e.g.,~\cite{luo_test_1994}.
 
 % ------------------------------------------------------------------------------------
 
-FSMs can be composed  by synchronising over their common input and
+FSMs can be composed in parallel by synchronising over their common input and
 output events. Let FSMs $M_i=(Q_i, \ii{q_i}, \Sigma_I, \Sigma_O,  h_i), i =
-1,2$ be defined over the same input and output alphabets. Then the \emph{intersection 
-of $M_1$ and $M_2$} is specified by
+1,2$ be defined over the same input and output alphabets. The
+\emph{intersection of $M_1$ and $M_2$} is specified by
 $$
 M_1 \cap M_2 = (Q_1\times Q_2, (\ii{q_1},\ii{q_2}),\Sigma_I, \Sigma_O, h)
 $$
@@ -431,5 +431,8 @@ $$
 \xrightarrow{x_2/y_2} \dots \xrightarrow{x_k/y_k} q_2^{k}\
 \text{of}\ M_2
 $$
+We say that $M_1 \cap M_2$ is the behaviour when $M_1$ and $M_2$ run in
+intersection mode with each other.
+
 In the next section, we show how normalised transition graphs can be encoded
-as   FSMs.
+as FSMs.
